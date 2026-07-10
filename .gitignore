@@ -1,0 +1,7 @@
+Token.swift
+xcuserdata/
+*.xcuserstate
+DerivedData/
+.build/
+.swiftpm/
+.DS_Store
