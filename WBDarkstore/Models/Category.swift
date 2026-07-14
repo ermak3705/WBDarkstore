@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct Category: Identifiable {
+struct Category: Identifiable, Hashable {
     var id = UUID()
     var name: String
     var imageURL: URL?
