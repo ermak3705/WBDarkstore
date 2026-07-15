@@ -10,23 +10,27 @@ import SwiftUI
 @main
 struct WBDarkstoreApp: App {
 
-    let categoriesService: CategoriesService
-
-    init() {
-       
-        KeychainHelper.save(Secrets.apiToken, forKey: "apiToken")
-
-        guard let token = KeychainHelper.read(forKey: "apiToken") else {
-            fatalError("Токен не найден в Keychain")
-        }
-
-        let client = try! APIClientFactory.makeClient(token: token)
-        categoriesService = CategoriesService(client: client)
-    }
+    @State private var services = ServiceLocator()
 
     var body: some Scene {
         WindowGroup {
-            CatalogView(service: categoriesService)
+            NavigationStack(path: Bindable(services.router).path) {
+                LoginView()
+                    .navigationDestination(for: Route.self) { route in
+                        switch route {
+                        case .login:
+                            LoginView()
+                        case .catalog:
+                            CatalogView(service: services.categoryService)
+                        case .categoryDetail(let category):
+                            Text("Категория: \(category.name)")
+                        case .profile:
+                            Text("Профиль")
+                        }
+                    }
+            }
+            .environment(services.router)
+            .environment(services)
         }
     }
 }

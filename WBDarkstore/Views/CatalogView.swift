@@ -21,73 +21,71 @@ struct CatalogView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                if service.isLoading {
-                    ProgressView()
-                        .padding(.top, 40)
-                } else {
-                    LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(service.categories) { category in
-                            RoundedRectangle(cornerRadius: 14)
-                                .fill(Color.white)
-                                .aspectRatio(115/132, contentMode: .fit)
-                                .overlay {
-                                    AsyncImage(url: category.imageURL) { phase in
-                                        switch phase {
-                                        case .success(let image):
-                                            image
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fill)
-                                        case .failure:
-                                            Image(systemName: "photo")
-                                                .foregroundColor(.gray)
-                                        case .empty:
-                                            ProgressView()
-                                        @unknown default:
-                                            EmptyView()
-                                        }
+        ScrollView {
+            if service.isLoading {
+                ProgressView()
+                    .padding(.top, 40)
+            } else {
+                LazyVGrid(columns: columns, spacing: 16) {
+                    ForEach(service.categories) { category in
+                        RoundedRectangle(cornerRadius: 14)
+                            .fill(Color.white)
+                            .aspectRatio(115/132, contentMode: .fit)
+                            .overlay {
+                                AsyncImage(url: category.imageURL) { phase in
+                                    switch phase {
+                                    case .success(let image):
+                                        image
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fill)
+                                    case .failure:
+                                        Image(systemName: "photo")
+                                            .foregroundColor(.gray)
+                                    case .empty:
+                                        ProgressView()
+                                    @unknown default:
+                                        EmptyView()
                                     }
                                 }
-                                .overlay {
-                                    GeometryReader { geometry in
-                                        LinearGradient(colors: [
-                                            .clear,
-                                            .white.opacity(0.4),
-                                            .white.opacity(0.8),
-                                            .white.opacity(0.9),
-                                            .white.opacity(0.95),
-                                            .white
-                                        ],
-                                                       startPoint: .top,
-                                                       endPoint: .bottom)
-                                        .frame(height: geometry.size.height * 0.5)
-                                        .position(x: geometry.size.width / 2,
-                                                  y: geometry.size.height * (3/4) )
-                                        
-                                    }
+                            }
+                            .overlay {
+                                GeometryReader { geometry in
+                                    LinearGradient(colors: [
+                                        .clear,
+                                        .white.opacity(0.4),
+                                        .white.opacity(0.5),
+                                        .white.opacity(0.6),
+                                        .white.opacity(0.8),
+                                        .white.opacity(0.9),
+                                        .white.opacity(0.95),
+                                        .white
+                                    ],
+                                                   startPoint: .top,
+                                                   endPoint: .bottom)
+                                    .frame(height: geometry.size.height * (1/3))
+                                    .position(x: geometry.size.width / 2,
+                                              y: geometry.size.height * (5/6))
                                 }
-                                .overlay(alignment: .bottomLeading) {
-                                    Text(category.name)
-                                        .font(.subheadline)
-                                        .fontWeight(.medium)
-                                        .foregroundColor(.black)
-                                        .lineLimit(2)
-                                        .padding(.bottom, 8)
-                                        .padding(.leading, 8)
-                                }
-                                .clipShape(RoundedRectangle(cornerRadius: 14))
-                                .shadow(color: .black.opacity(0.08), radius: 6, x: 0, y: 2)
-                        }
+                            }
+                            .overlay(alignment: .bottomLeading) {
+                                Text(category.name)
+                                    .font(.system(size: 14))
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.black)
+                                    .padding(.bottom, 6)
+                                    .padding(.leading, 8)
+                            }
+                            .clipShape(RoundedRectangle(cornerRadius: 14))
+                            .shadow(color: .black.opacity(0.08), radius: 6, x: 0, y: 2)
                     }
-                    .padding(16)
                 }
+                .padding(16)
             }
-            .task {
-                await service.loadCategories()
-            }
-            .navigationTitle("Каталог")
         }
+        .task {
+            await service.loadCategories()
+        }
+        .navigationTitle("Каталог")
     }
 }
 
