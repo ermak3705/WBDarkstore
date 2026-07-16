@@ -90,5 +90,5 @@ struct CatalogView: View {
 }
 
 #Preview {
-    CatalogView(service: CategoriesService(client: try! APIClientFactory.makeClient(token: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJta29uZGFrb3ZhIiwiaWF0IjoxNzgyOTIyMDMzLCJqdGkiOiIwMmRhNTBhZS02YzQ2LTQ4MTItYjRhNi0xOTMzYmRkMGU5YzMiLCJuaWNrbmFtZSI6ImVybWFrb3YuaWx5YSIsImlzVGVhY2hlciI6dHJ1ZX0.a7pfvXyTVtnH7zoeP5vLoJEyM7-0DMYDwAD7yTIS8LaK34x4i7bq5dzJSBTzv4FQ-r0OfnLbMrpsUPMWGzYXnHo5QM2RElC4tSiPN9VRacXyosz7Hx8B6uAPPud25uajy3WJFsJsM12_KNMDX3Xcfew2oMdXaEQiOPbrO423AJwEZJ1QqadHvn4wM1f4OLzhakH3GYDh45OTxcI78vN2A3wWfdQmpp73GTje5xHn9D31Hq-p9zWt3HSb8JDGX-yeqXbdZKpFuTX7Ho3q5-mzQAimQmnEMI1viDXUJ2D0MYiNosV6oyk7VlNVq73kYNciG_wn4_UHM09LSwSUtYD0_w")))
+    CatalogView(service: CategoriesService(client: try! APIClientFactory.makeClient(token: Secrets.apiToken)))
 }

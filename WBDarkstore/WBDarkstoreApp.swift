@@ -15,7 +15,7 @@ struct WBDarkstoreApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack(path: Bindable(services.router).path) {
-                LoginView()
+                CatalogView(service: services.categoryService)
                     .navigationDestination(for: Route.self) { route in
                         switch route {
                         case .login:
