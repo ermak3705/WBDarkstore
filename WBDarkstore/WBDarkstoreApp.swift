@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct WBDarkstoreApp: App {
 
-    let categoriesService: CategoriesService
+    let productsService: ProductsService
 
     init() {
        
@@ -21,12 +21,12 @@ struct WBDarkstoreApp: App {
         }
 
         let client = try! APIClientFactory.makeClient(token: token)
-        categoriesService = CategoriesService(client: client)
+        productsService = ProductsService(client: client)
     }
 
     var body: some Scene {
         WindowGroup {
-            CatalogView(service: categoriesService)
+            CatalogView(service: productsService)
         }
     }
 }
