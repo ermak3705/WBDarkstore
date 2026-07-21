@@ -14,23 +14,9 @@ struct WBDarkstoreApp: App {
 
     var body: some Scene {
         WindowGroup {
-            NavigationStack(path: Bindable(services.router).path) {
-                CatalogView(service: services.categoryService)
-                    .navigationDestination(for: Route.self) { route in
-                        switch route {
-                        case .login:
-                            LoginView()
-                        case .catalog:
-                            CatalogView(service: services.categoryService)
-                        case .categoryDetail(let category):
-                            Text("Категория: \(category.name)")
-                        case .profile:
-                            Text("Профиль")
-                        }
-                    }
-            }
-            .environment(services.router)
-            .environment(services)
+            ProductListView()
+                .environment(services.router)
+                .environment(services)
         }
     }
 }

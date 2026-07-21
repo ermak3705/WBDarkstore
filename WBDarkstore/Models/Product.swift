@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct Product: Identifiable {
-    var id = UUID()
+    var id: String
     var title: String
     var price: Int
     var imageURL: URL?

@@ -17,6 +17,9 @@ final class ProductsService {
     private(set) var isLoading = false
     private(set) var error: Error?
 
+    private(set) var productDetail: ProductDetail?
+    private(set) var isLoadingDetail = false
+
     init(client: Client) {
         self.client = client
     }
@@ -35,6 +38,7 @@ final class ProductsService {
                 let items = try okResponse.body.json.data
                 products = items.map { item in
                     Product(
+                        id: item.id,
                         title: item.name,
                         price: item.price,
                         imageURL: URL(string: item.image)
@@ -43,6 +47,35 @@ final class ProductsService {
             case .unauthorized(_):
                 error = APIError.unauthorized
             case .badRequest(_):
+                error = APIError.unexpected
+            case .default(statusCode: _, _):
+                error = APIError.unexpected
+            }
+        } catch {
+            self.error = error
+        }
+    }
+
+    func loadProductDetail(id: String) async {
+        isLoadingDetail = true
+        error = nil
+        defer { isLoadingDetail = false }
+
+        do {
+            let response = try await client.getProductsId(path: .init(id: id))
+            switch response {
+            case .ok(let okResponse):
+                let item = try okResponse.body.json
+                productDetail = ProductDetail(
+                    id: item.id,
+                    title: item.name,
+                    description: item.description,
+                    price: item.price,
+                    imageURL: URL(string: item.image)
+                )
+            case .unauthorized(_):
+                error = APIError.unauthorized
+            case .notFound(_):
                 error = APIError.unexpected
             case .default(statusCode: _, _):
                 error = APIError.unexpected

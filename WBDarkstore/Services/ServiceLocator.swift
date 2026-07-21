@@ -17,6 +17,7 @@ final class ServiceLocator {
     let userService: UserService
     let categoryService: CategoriesService
     let productService: ProductsService
+    let cartService: CartService
     
     init() {
         let client = try! APIClientFactory.makeClient(token: Secrets.apiToken)
@@ -26,5 +27,6 @@ final class ServiceLocator {
         self.userService = UserService(client: client)
         self.categoryService = CategoriesService(client: client)
         self.productService = ProductsService(client: client)
+        self.cartService = CartService()
     }
 }

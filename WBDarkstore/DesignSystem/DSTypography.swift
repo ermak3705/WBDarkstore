@@ -13,4 +13,5 @@ enum DSTypography {
     static let headline = Font.system(size: 14, weight: .medium)
     static let body = Font.system(size: 14, weight: .regular)
     static let priceButton = Font.system(size: 20, weight: .medium)
+    static let rubIcon = Font.system(size: 14, weight: .semibold)
 }
