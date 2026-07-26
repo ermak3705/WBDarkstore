@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct Product: Identifiable {
+struct Product: Identifiable, Hashable {
     var id: String
     var title: String
     var price: Int

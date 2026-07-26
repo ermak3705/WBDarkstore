@@ -36,7 +36,7 @@ struct DSButton: View {
             .frame(maxWidth: .infinity)
             .frame(height: 50)
             .background(DSGradients.violet)
-            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
         }
         .disabled(isLoading)
     }

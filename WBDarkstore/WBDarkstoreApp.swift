@@ -14,7 +14,7 @@ struct WBDarkstoreApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ProductListView()
+            MainTabView()
                 .environment(services.router)
                 .environment(services)
         }

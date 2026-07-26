@@ -9,12 +9,13 @@ import SwiftUI
 
 struct ProductListView: View {
     @Environment(ServiceLocator.self) private var services
-    
+    @State private var selectedProduct: Product?
+
     let columns: [GridItem] = [
         .init(.flexible(), spacing: 12),
         .init(.flexible(), spacing: 12)
     ]
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -23,8 +24,13 @@ struct ProductListView: View {
                         .padding(.top, 40)
                 } else {
                     LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(services.productService.products) {product in
-                            ProductCard(product: product)
+                        ForEach(services.productService.products) { product in
+                            Button {
+                                selectedProduct = product
+                            } label: {
+                                ProductCard(product: product)
+                            }
+                            .buttonStyle(.plain)
                         }
                     }
                     .padding(16)
@@ -33,6 +39,9 @@ struct ProductListView: View {
             .navigationTitle("Каталог")
             .task {
                 await services.productService.loadProducts()
+            }
+            .sheet(item: $selectedProduct) { product in
+                ProductDetailView(productId: product.id)
             }
         }
     }
