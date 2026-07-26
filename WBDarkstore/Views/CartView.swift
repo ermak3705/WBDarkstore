@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CartView: View {
     @Environment(ServiceLocator.self) private var services
+    @State private var refreshID = UUID()
 
     var body: some View {
         NavigationStack {
@@ -20,9 +21,6 @@ struct CartView: View {
 
                     VStack(spacing: 20) {
                         ForEach(services.cartService.items) { item in
-                            
-                            let _ = print("Cart item: \(item.product.title), imageURL: \(String(describing: item.product.imageURL))")
-                            
                             HStack(alignment: .top, spacing: 12) {
                                 RoundedRectangle(cornerRadius: 12)
                                     .fill(DSColors.background)
@@ -43,7 +41,7 @@ struct CartView: View {
                                                 EmptyView()
                                             }
                                         }
-                                        .id(item.id)
+                                        .id("\(item.id)-\(refreshID)")
                                     }
                                     .clipShape(RoundedRectangle(cornerRadius: 12))
 
@@ -77,6 +75,9 @@ struct CartView: View {
                 .padding(16)
             }
             .navigationTitle("Корзина")
+            .onAppear {
+                refreshID = UUID()
+            }
         }
     }
 }

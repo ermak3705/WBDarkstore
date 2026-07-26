@@ -14,18 +14,15 @@ final class Router {
 
     func push(_ route: Route) {
         path.append(route)
-        //print("PUSH: \(route), path count: \(path.count)")
     }
 
     func pop() {
         guard !path.isEmpty else { return }
         path.removeLast()
-        //print("POP, path count: \(path.count)")
     }
 
     func popToRoot() {
         path.removeLast(path.count)
-        //print("POP TO ROOT, path count: \(path.count)")
     }
 
     func replace(with route: Route) {
