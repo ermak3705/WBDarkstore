@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WBDesignSystemKit
 
 struct ProductCard: View {
     let product: Product

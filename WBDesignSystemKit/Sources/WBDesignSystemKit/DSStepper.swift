@@ -7,12 +7,18 @@
 
 import SwiftUI
 
-struct DSStepper: View {
+public struct DSStepper: View {
     let quantity: Int
     let onIncrement: () -> Void
     let onDecrement: () -> Void
 
-    var body: some View{
+    public init(quantity: Int, onIncrement: @escaping () -> Void, onDecrement: @escaping () -> Void) {
+        self.quantity = quantity
+        self.onIncrement = onIncrement
+        self.onDecrement = onDecrement
+    }
+
+    public var body: some View {
         HStack(spacing: 16) {
             Button(action: onDecrement) {
                 Image(systemName: "minus")
@@ -23,7 +29,7 @@ struct DSStepper: View {
                 .font(DSTypography.headline)
                 .frame(minWidth: 16)
 
-            Button(action: onIncrement){
+            Button(action: onIncrement) {
                 Image(systemName: "plus")
                     .font(.system(size: 14, weight: .semibold))
             }

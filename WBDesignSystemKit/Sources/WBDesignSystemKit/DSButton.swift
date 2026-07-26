@@ -7,13 +7,20 @@
 
 import SwiftUI
 
-struct DSButton: View {
+public struct DSButton: View {
     var price: String? = nil
     let title: String
     var isLoading: Bool = false
     let action: () -> Void
 
-    var body: some View {
+    public init(price: String? = nil, title: String, isLoading: Bool = false, action: @escaping () -> Void) {
+        self.price = price
+        self.title = title
+        self.isLoading = isLoading
+        self.action = action
+    }
+
+    public var body: some View {
         Button(action: action) {
             HStack {
                 if let price {

@@ -7,20 +7,22 @@
 
 import SwiftUI
 
-enum DSColors {
-    static let primary = Color(hex: "#BF22E1")
+import SwiftUI
+
+public enum DSColors {
+    public static let primary = Color(hex: "#BF22E1")
     
-    static let gradientStart = Color(hex: "#ED3CCA")
-    static let gradientEnd = Color(hex: "#6600FF")
+    public static let gradientStart = Color(hex: "#ED3CCA")
+    public static let gradientEnd = Color(hex: "#6600FF")
     
-    static let background = Color.white
-    static let secondaryBackground = Color(uiColor: .systemGray6)
-    static let textPrimary = Color.black
-    static let textSecondary = Color.gray
-    static let error = Color.red
+    public static let background = Color.white
+    public static let secondaryBackground = Color(uiColor: .systemGray6)
+    public static let textPrimary = Color.black
+    public static let textSecondary = Color.gray
+    public static let error = Color.red
 }
 
-extension Color {
+public extension Color {
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var int: UInt64 = 0
@@ -37,8 +39,8 @@ extension Color {
     }
 }
 
-enum DSGradients {
-    static let violet = LinearGradient(
+public enum DSGradients {
+    public static let violet = LinearGradient(
         colors: [
             Color(hex: "#ED3CCA"),
             Color(hex: "#DF34D2"),

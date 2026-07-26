@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WBDesignSystemKit
 
 struct CartView: View {
     @Environment(ServiceLocator.self) private var services

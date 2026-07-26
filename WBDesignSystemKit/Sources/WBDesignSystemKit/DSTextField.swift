@@ -7,12 +7,18 @@
 
 import SwiftUI
 
-struct DSTextField: View {
+public struct DSTextField: View {
     let placeholder: String
     @Binding var text: String
     var isSecure: Bool = false
 
-    var body: some View {
+    public init(placeholder: String, text: Binding<String>, isSecure: Bool = false) {
+        self.placeholder = placeholder
+        self._text = text
+        self.isSecure = isSecure
+    }
+
+    public var body: some View {
         Group {
             if isSecure {
                 SecureField(placeholder, text: $text)

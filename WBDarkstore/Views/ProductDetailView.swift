@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WBDesignSystemKit
 
 struct ProductDetailView: View {
     let productId: String
