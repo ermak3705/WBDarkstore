@@ -15,7 +15,7 @@ final class CartService {
         items.reduce(0) { $0 + $1.product.price * $1.quantity }
     }
 
-    var totalCount: Int {
+    var totalCount: Int { 
         items.reduce(0) { $0 + $1.quantity }
     }
 

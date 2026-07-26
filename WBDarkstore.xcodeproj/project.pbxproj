@@ -11,6 +11,7 @@
 		F7234BCE2FF6EBB300727B73 /* HTTPTypesFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = F7234BCD2FF6EBB300727B73 /* HTTPTypesFoundation */; };
 		F7234BD02FF6EBB300727B73 /* OpenAPIURLSession in Frameworks */ = {isa = PBXBuildFile; productRef = F7234BCF2FF6EBB300727B73 /* OpenAPIURLSession */; };
 		F7234BD22FF6EBB300727B73 /* OpenAPIRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = F7234BD12FF6EBB300727B73 /* OpenAPIRuntime */; };
+		F76818863016582C0041EC1A /* WBDesignSystemKit in Frameworks */ = {isa = PBXBuildFile; productRef = F76818853016582C0041EC1A /* WBDesignSystemKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,7 @@
 				F7234BD02FF6EBB300727B73 /* OpenAPIURLSession in Frameworks */,
 				F7234BD22FF6EBB300727B73 /* OpenAPIRuntime in Frameworks */,
 				F7234BCE2FF6EBB300727B73 /* HTTPTypesFoundation in Frameworks */,
+				F76818863016582C0041EC1A /* WBDesignSystemKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,6 +138,7 @@
 				F7234BCD2FF6EBB300727B73 /* HTTPTypesFoundation */,
 				F7234BCF2FF6EBB300727B73 /* OpenAPIURLSession */,
 				F7234BD12FF6EBB300727B73 /* OpenAPIRuntime */,
+				F76818853016582C0041EC1A /* WBDesignSystemKit */,
 			);
 			productName = WBDarkstore;
 			productReference = F74252FE2FF174F00022074C /* WBDarkstore.app */;
@@ -224,6 +227,7 @@
 				F7234BC62FF6EAC200727B73 /* XCRemoteSwiftPackageReference "swift-openapi-urlsession" */,
 				F7234BC72FF6EACA00727B73 /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */,
 				F7234BC82FF6EAD300727B73 /* XCRemoteSwiftPackageReference "swift-openapi-generator" */,
+				F76818843016582C0041EC1A /* XCLocalSwiftPackageReference "WBDesignSystemKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F74252FF2FF174F00022074C /* Products */;
@@ -613,6 +617,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		F76818843016582C0041EC1A /* XCLocalSwiftPackageReference "WBDesignSystemKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = WBDesignSystemKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		F7234BC52FF6EAB700727B73 /* XCRemoteSwiftPackageReference "swift-http-types" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -673,6 +684,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F7234BC82FF6EAD300727B73 /* XCRemoteSwiftPackageReference "swift-openapi-generator" */;
 			productName = "plugin:OpenAPIGenerator";
+		};
+		F76818853016582C0041EC1A /* WBDesignSystemKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = WBDesignSystemKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

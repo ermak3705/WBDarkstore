@@ -32,7 +32,7 @@ struct DSStepper: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 6)
         .background(DSColors.secondaryBackground)
-        .clipShape(Capsule())
+        .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }
 
