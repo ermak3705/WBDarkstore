@@ -1,0 +1,3 @@
+enum Secrets {
+    static let apiToken = "ВСТАВЬТЕ_ВАШ_ТОКЕН_СЮДА"
+}
