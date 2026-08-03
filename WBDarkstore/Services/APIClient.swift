@@ -11,10 +11,12 @@ import OpenAPIURLSession
 
 enum APIClientFactory {
     static func makeClient(token: String) throws -> Client {
-       try Client(
-        serverURL: Servers.Server1.url(),
-            transport: URLSessionTransport(),
-            middlewares: [AuthMiddleware(token: token)])
+        try Client(
+            serverURL: Servers.Server1.url(),
+            configuration: Configuration(dateTranscoder: FlexibleISO8601DateTranscoder()),
+             transport: URLSessionTransport(),
+             middlewares: [AuthMiddleware(token: token)]
+        )
     }
 }
 
