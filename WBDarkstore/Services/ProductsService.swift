@@ -59,6 +59,7 @@ final class ProductsService {
     func loadProductDetail(id: String) async {
         isLoadingDetail = true
         error = nil
+        productDetail = nil 
         defer { isLoadingDetail = false }
 
         do {

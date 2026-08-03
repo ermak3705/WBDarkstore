@@ -12,6 +12,7 @@ import OpenAPIURLSession
 @Observable
 final class ServiceLocator {
     
+    let client: Client
     let router: Router
     let authService: AuthService
     let userService: UserService
@@ -22,6 +23,7 @@ final class ServiceLocator {
     init() {
         let client = try! APIClientFactory.makeClient(token: Secrets.apiToken)
         
+        self.client = client
         self.router = Router()
         self.authService = AuthService()
         self.userService = UserService(client: client)

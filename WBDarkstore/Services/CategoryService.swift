@@ -33,7 +33,7 @@ final class CategoriesService {
             case .ok(let okResponse):
                 let items = try okResponse.body.json
                 categories = items.map { item in
-                    Category(name: item.name, imageURL: URL(string: item.image))
+                    Category(id: item.id, name: item.name, imageURL: URL(string: item.image))
                 }
             case .unauthorized(_):
                 error = APIError.unauthorized
