@@ -43,7 +43,7 @@ struct ProductDetailView: View {
                                     }
                                 }
                                 .clipShape(RoundedRectangle(cornerRadius: 14))
-
+                            
                             Button {
                                 dismiss()
                             } label: {
@@ -56,24 +56,25 @@ struct ProductDetailView: View {
                             }
                             .padding(12)
                         }
-
-                        HStack(alignment: .bottom, spacing: 4) {
-                            Text("\(detail.price)")
-                                .font(DSTypography.title)
-                            Text("₽")
-                                .font(DSTypography.title)
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack(alignment: .bottom, spacing: 4) {
+                                Text("\(detail.price)")
+                                    .font(DSTypography.title)
+                                Text("₽")
+                                    .font(DSTypography.title)
+                            }
+                            .foregroundColor(DSColors.textPrimary)
+                            
+                            Text(detail.title)
+                                .font(DSTypography.title2)
+                                .foregroundColor(DSColors.textPrimary)
+                            
+                            Text(detail.description)
+                                .font(DSTypography.title3)
+                                .foregroundColor(DSColors.textPrimary)
                         }
-                        .foregroundColor(DSColors.textPrimary)
-
-                        Text(detail.title)
-                            .font(DSTypography.title2)
-                            .foregroundColor(DSColors.textPrimary)
-
-                        Text(detail.description)
-                            .font(DSTypography.title3)
-                            .foregroundColor(DSColors.textPrimary)
+                        .padding(.horizontal, 16)
                     }
-                    .padding(16)
                 }
             }
 

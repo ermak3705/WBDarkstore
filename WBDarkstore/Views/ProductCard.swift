@@ -14,7 +14,7 @@ struct ProductCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             RoundedRectangle(cornerRadius: 14)
-                .fill(DSColors.background)
+                .fill(Color.white)
                 .aspectRatio(1, contentMode: .fit)
                 .overlay {
                     AsyncImage(url: product.imageURL) { phase in
@@ -46,8 +46,8 @@ struct ProductCard: View {
             }
 
             Text(product.title)
-                .font(DSTypography.body)
-                .foregroundColor(DSColors.textPrimary)
+                .font(.system(size: 14, weight: .regular))
+                .foregroundColor(.black)
                 .lineLimit(1)
         }
     }
