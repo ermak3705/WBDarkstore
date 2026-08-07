@@ -12,6 +12,10 @@ struct ProductDetailView: View {
     let productId: String
     @Environment(ServiceLocator.self) private var services
     @Environment(\.dismiss) private var dismiss
+    
+    private var isFavorite: Bool {
+        services.favoritesService.products.contains{ $0.id == productId}
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -57,13 +61,26 @@ struct ProductDetailView: View {
                             .padding(12)
                         }
                         VStack(alignment: .leading, spacing: 12) {
-                            HStack(alignment: .bottom, spacing: 4) {
-                                Text("\(detail.price)")
-                                    .font(DSTypography.title)
-                                Text("₽")
-                                    .font(DSTypography.title)
+                            HStack {
+                                HStack(alignment: .bottom, spacing: 4) {
+                                    Text("\(detail.price)")
+                                        .font(DSTypography.title)
+                                    Text("₽")
+                                        .font(DSTypography.title)
+                                }
+                                .foregroundColor(DSColors.textPrimary)
+
+                                Spacer()
+
+                                Button {
+                                    let product = Product(id: detail.id, title: detail.title, price: detail.price, imageURL: detail.imageURL)
+                                    services.favoritesService.toggle(product)
+                                } label: {
+                                    Image(systemName: isFavorite ? "heart.fill" : "heart")
+                                        .font(.system(size: 20, weight: .medium))
+                                        .foregroundColor(isFavorite ? .pink : .gray)
+                                }
                             }
-                            .foregroundColor(DSColors.textPrimary)
                             
                             Text(detail.title)
                                 .font(DSTypography.title2)

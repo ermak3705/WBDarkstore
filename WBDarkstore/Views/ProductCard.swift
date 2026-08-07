@@ -10,6 +10,7 @@ import WBDesignSystemKit
 
 struct ProductCard: View {
     let product: Product
+    @Environment(ServiceLocator.self) private var services
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -33,6 +34,16 @@ struct ProductCard: View {
                         }
                     }
                 }
+                .overlay(alignment: .topTrailing) {
+                    Button {
+                        services.favoritesService.toggle(product)
+                    } label: {
+                        Image(systemName: services.favoritesService.isFavorite(product) ? "heart.fill" : "heart.fill")
+                            .font(.system(size: 20, weight: .regular))
+                            .foregroundColor(services.favoritesService.isFavorite(product) ? .pink : Color(uiColor: .systemGray3))
+                    }
+                    .padding(12)
+                }
                 .clipShape(RoundedRectangle(cornerRadius: 14))
                 .shadow(color: .black.opacity(0.06), radius: 6, x: 0, y: 2)
 
@@ -46,7 +57,7 @@ struct ProductCard: View {
             }
 
             Text(product.title)
-                .font(.system(size: 14, weight: .regular))
+                .font(DSTypography.body)
                 .foregroundColor(.black)
                 .lineLimit(1)
         }
@@ -55,6 +66,7 @@ struct ProductCard: View {
 
 #Preview {
     ProductCard(product: Product(id: "1", title: "Бутер ЛЮКС", price: 1400, imageURL: nil))
+        .environment(ServiceLocator())
         .frame(width: 160)
         .padding()
 }

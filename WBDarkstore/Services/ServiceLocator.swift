@@ -19,6 +19,7 @@ final class ServiceLocator {
     let categoryService: CategoriesService
     let productService: ProductsService
     let cartService: CartService
+    let favoritesService: FavoritesService
     
     init() {
         let client = try! APIClientFactory.makeClient(token: Secrets.apiToken)
@@ -30,5 +31,6 @@ final class ServiceLocator {
         self.categoryService = CategoriesService(client: client)
         self.productService = ProductsService(client: client)
         self.cartService = CartService()
+        self.favoritesService = FavoritesService()
     }
 }

@@ -21,6 +21,12 @@ struct MainTabView: View {
             .tabItem {
                 Label("Каталог", systemImage: "square.grid.2x2")
             }
+            
+            FavoritesView()
+                .tabItem {
+                    Label("Избранное", systemImage: "heart")
+                }
+            
             CartView()
                 .tabItem {
                     Label("Корзина", systemImage: "cart")
