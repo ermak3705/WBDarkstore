@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 public enum DSColors {
     public static let primary = Color(hex: "#BF22E1")
     
@@ -50,6 +48,15 @@ public enum DSGradients {
             Color(hex: "#9A10F0"),
             Color(hex: "#8306F7"),
             Color(hex: "#6600FF")
+        ],
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
+    public static let smoky = LinearGradient(
+        colors: [
+            Color(hex: "#9797AF").opacity(0.2),
+            Color(hex: "#000000")
         ],
         startPoint: .leading,
         endPoint: .trailing

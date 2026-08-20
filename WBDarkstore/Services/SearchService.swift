@@ -6,15 +6,10 @@
 //
 
 import Foundation
-import OpenAPIRuntime
-import OpenAPIURLSession
 
 @Observable
 final class SearchService {
-    private let client: Client
-
-    private(set) var allProducts: [Product] = []
-    private(set) var isLoading = false
+    private let productsService: ProductsService
 
     var query: String = "" {
         didSet {
@@ -24,18 +19,13 @@ final class SearchService {
 
     private(set) var suggestions: [Product] = []
 
-    init(client: Client) {
-        self.client = client
+    init(productsService: ProductsService) {
+        self.productsService = productsService
     }
 
     func loadAllProducts() async {
-        guard allProducts.isEmpty else { return }
-        isLoading = true
-        defer { isLoading = false }
-
-        let service = ProductsService(client: client)
-        await service.loadProducts(pageSize: 200)
-        allProducts = service.products
+        guard productsService.products.isEmpty else { return }
+        await productsService.loadProducts(pageSize: 200)
     }
 
     private func updateSuggestions() {
@@ -43,7 +33,7 @@ final class SearchService {
             suggestions = []
             return
         }
-        suggestions = allProducts.filter {
+        suggestions = productsService.products.filter {
             $0.title.localizedCaseInsensitiveContains(query)
         }
     }

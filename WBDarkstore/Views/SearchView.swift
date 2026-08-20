@@ -9,15 +9,13 @@ import SwiftUI
 import WBDesignSystemKit
 
 struct SearchView: View {
-    let client: Client
     @State private var searchService: SearchService
     @Environment(\.dismiss) private var dismiss
     @State private var selectedProduct: Product?
     @FocusState private var isFocused: Bool
 
-    init(client: Client) {
-        self.client = client
-        _searchService = State(initialValue: SearchService(client: client))
+    init(productsService: ProductsService) {
+        _searchService = State(initialValue: SearchService(productsService: productsService))
     }
 
     var body: some View {

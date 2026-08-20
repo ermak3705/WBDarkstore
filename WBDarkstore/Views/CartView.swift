@@ -36,7 +36,7 @@ struct CartView: View {
                 .fill(DSColors.background)
                 .frame(width: 100, height: 100)
                 .overlay {
-                    AsyncImage(url: item.product.imageURL) { phase in
+                    AsyncImage(url: item.imageURL) { phase in
                         switch phase {
                         case .success(let image):
                             image
@@ -57,21 +57,21 @@ struct CartView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack(alignment: .bottom, spacing: 4) {
-                    Text("\(item.product.price * item.quantity)")
+                    Text("\(item.price * item.quantity)")
                         .font(DSTypography.price)
                     Text("₽")
                         .font(DSTypography.rubIcon)
                 }
                 .foregroundColor(DSColors.textPrimary)
 
-                Text(item.product.title)
+                Text(item.title)
                     .font(DSTypography.body)
                     .foregroundColor(DSColors.textPrimary)
 
                 DSStepper(
                     quantity: item.quantity,
-                    onIncrement: { services.cartService.increment(item) },
-                    onDecrement: { services.cartService.decrement(item) }
+                    onIncrement: {Task { await services.cartService.increment(item) }},
+                    onDecrement: {Task { await services.cartService.decrement(item) }}
                 )
                 .padding(.top, 4)
             }

@@ -12,11 +12,41 @@ struct ProductDetailView: View {
     let productId: String
     @Environment(ServiceLocator.self) private var services
     @Environment(\.dismiss) private var dismiss
+    @State private var showReviews = false
     
     private var isFavorite: Bool {
         services.favoritesService.products.contains{ $0.id == productId}
     }
 
+    private func ratingRow(_ detail: ProductDetail) -> some View {
+        let summary = ReviewsSummary(reviews: detail.reviews)
+
+        return Button {
+            showReviews = true
+        } label: {
+            HStack(spacing: 8) {
+                Text(String(format: "%.1f", summary.averageRating))
+                    .font(.system(size: 16,weight: .regular))
+                HStack(spacing: 1) {
+                    ForEach(0..<5, id: \.self) { index in
+                        Image(systemName: index < Int(summary.averageRating.rounded()) ? "star.fill" : "star")
+                            .font(.system(size: 12))
+                    }
+                }
+                .foregroundColor(.black)
+                
+                HStack (spacing: 4) {
+                    Image(systemName: "message")
+                        .font(.system(size: 12))
+                    Text("\(summary.totalCount) отзыв >")
+                        .font(.system(size: 16,weight: .regular))
+                }
+            }
+            .font(DSTypography.body)
+            .foregroundColor(DSColors.textPrimary)
+        }
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
@@ -60,7 +90,7 @@ struct ProductDetailView: View {
                             }
                             .padding(12)
                         }
-                        VStack(alignment: .leading, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 8) {
                             HStack {
                                 HStack(alignment: .bottom, spacing: 4) {
                                     Text("\(detail.price)")
@@ -72,9 +102,10 @@ struct ProductDetailView: View {
 
                                 Spacer()
 
-                                Button {
-                                    let product = Product(id: detail.id, title: detail.title, price: detail.price, imageURL: detail.imageURL)
-                                    services.favoritesService.toggle(product)
+                                Button { Task {
+                                    let product = Product(id: detail.id, title: detail.title, price: detail.price, imageURL: detail.imageURL, rating: detail.rating, reviewCount: detail.reviews.count, weight: detail.weight)
+                                   await services.favoritesService.toggle(product)
+                                }
                                 } label: {
                                     Image(systemName: isFavorite ? "heart.fill" : "heart")
                                         .font(.system(size: 20, weight: .medium))
@@ -82,9 +113,16 @@ struct ProductDetailView: View {
                                 }
                             }
                             
-                            Text(detail.title)
-                                .font(DSTypography.title2)
-                                .foregroundColor(DSColors.textPrimary)
+                            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                                Text(detail.title)
+                                    .font(DSTypography.title2)
+                                    .foregroundColor(DSColors.textPrimary)
+                                Text("\(detail.weight)г")
+                                    .font(DSTypography.title2)
+                                    .foregroundColor(DSColors.textSecondary)
+                            }
+
+                            ratingRow(detail)
                             
                             Text(detail.description)
                                 .font(DSTypography.title3)
@@ -97,9 +135,12 @@ struct ProductDetailView: View {
 
             if let detail = services.productService.productDetail {
                 DSButton(title: "В корзину") {
-                    services.cartService.add(
-                        Product(id: detail.id, title: detail.title, price: detail.price, imageURL: detail.imageURL)
-                    )
+                    Task {
+                        await services.cartService.add(
+                            Product(id: detail.id, title: detail.title, price: detail.price, imageURL: detail.imageURL, rating: detail.rating, reviewCount: detail.reviews.count, weight: detail.weight)
+                        )
+                        dismiss()
+                    }
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 12)
@@ -109,6 +150,11 @@ struct ProductDetailView: View {
         }
         .task {
             await services.productService.loadProductDetail(id: productId)
+        }
+        .sheet(isPresented: $showReviews) {
+            if let detail = services.productService.productDetail {
+                ReviewsView(detail: detail)
+            }
         }
     }
 }
