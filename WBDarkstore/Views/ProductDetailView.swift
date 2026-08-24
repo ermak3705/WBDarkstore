@@ -60,7 +60,7 @@ struct ProductDetailView: View {
                                 .fill(DSColors.background)
                                 .aspectRatio(375/440, contentMode: .fit)
                                 .overlay {
-                                    AsyncImage(url: detail.imageURL) { phase in
+                                    CachedAsyncImage(url: detail.imageURL) { phase in
                                         switch phase {
                                         case .success(let image):
                                             image

@@ -10,7 +10,6 @@ import WBDesignSystemKit
 
 struct CartView: View {
     @Environment(ServiceLocator.self) private var services
-    @State private var refreshID = UUID()
 
     private var itemsList: some View {
         ScrollView {
@@ -36,7 +35,7 @@ struct CartView: View {
                 .fill(DSColors.background)
                 .frame(width: 100, height: 100)
                 .overlay {
-                    AsyncImage(url: item.imageURL) { phase in
+                    CachedAsyncImage(url: item.imageURL) { phase in
                         switch phase {
                         case .success(let image):
                             image
@@ -51,7 +50,6 @@ struct CartView: View {
                             EmptyView()
                         }
                     }
-                    .id("\(item.id)-\(refreshID)")
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 12))
 
@@ -116,9 +114,6 @@ struct CartView: View {
                 }
             }
             .navigationTitle("Корзина")
-            .onAppear {
-                refreshID = UUID()
-            }
         }
     }
 }

@@ -46,7 +46,7 @@ struct CatalogView: View {
                 .fill(Color.white)
                 .aspectRatio(115/132, contentMode: .fit)
                 .overlay {
-                    AsyncImage(url: category.imageURL) { phase in
+                    CachedAsyncImage(url: category.imageURL) { phase in
                         switch phase {
                         case .success(let image):
                             image
