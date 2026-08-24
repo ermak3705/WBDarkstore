@@ -30,9 +30,9 @@ final class CartService {
     }
 
     func loadCart() async {
+        defer { isLoading = false }
         isLoading = true
         error = nil
-        defer { isLoading = false }
 
         do {
             let response = try await client.getCart()
