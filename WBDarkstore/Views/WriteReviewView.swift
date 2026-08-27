@@ -12,12 +12,13 @@ struct WriteReviewView: View {
     let detail: ProductDetail
     @Environment(\.dismiss) private var dismiss
     @Environment(ServiceLocator.self) private var services
-
+    
     @State private var rating: Int = 0
     @State private var comment: String = ""
     @State private var isSubmitting = false
     @State private var errorMessage: String?
-
+    @State private var didSubmitSuccessfully = false
+    
     private var productPreview: some View {
         HStack(spacing: 12) {
             RoundedRectangle(cornerRadius: 10)
@@ -31,7 +32,7 @@ struct WriteReviewView: View {
                     }
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 10))
-
+            
             VStack(alignment: .leading, spacing: 2) {
                 Text(detail.title)
                     .font(.system(size: 14, weight: .semibold))
@@ -42,12 +43,12 @@ struct WriteReviewView: View {
             }
         }
     }
-
+    
     private var ratingPicker: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Оценка")
                 .font(.system(size: 16, weight: .semibold))
-
+            
             HStack(spacing: 8) {
                 ForEach(1...5, id: \.self) { star in
                     Button {
@@ -61,12 +62,12 @@ struct WriteReviewView: View {
             }
         }
     }
-
+    
     private var commentField: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Комментарий")
                 .font(.system(size: 16, weight: .semibold))
-
+            
             TextEditor(text: $comment)
                 .frame(height: 120)
                 .padding(8)
@@ -74,7 +75,7 @@ struct WriteReviewView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12))
         }
     }
-
+    
     private var submitButton: some View {
         VStack(spacing: 8) {
             if let errorMessage {
@@ -82,7 +83,7 @@ struct WriteReviewView: View {
                     .font(.system(size: 13))
                     .foregroundColor(.red)
             }
-
+            
             DSButton(title: isSubmitting ? "Отправка..." : "Оставить отзыв", isLoading: isSubmitting) {
                 Task {
                     await submitReview()
@@ -91,20 +92,19 @@ struct WriteReviewView: View {
             .disabled(rating == 0 || comment.isEmpty || isSubmitting)
         }
     }
-
+    
     private func submitReview() async {
         isSubmitting = true
         errorMessage = nil
         defer { isSubmitting = false }
-
+        
         do {
             try await services.productService.submitReview(
                 productId: detail.id,
                 rating: rating,
                 content: comment
             )
-            await services.productService.loadProductDetail(id: detail.id)
-            dismiss()
+            didSubmitSuccessfully = true 
         } catch {
             errorMessage = "Не удалось отправить отзыв. Попробуйте ещё раз."
         }
@@ -136,6 +136,11 @@ struct WriteReviewView: View {
                         Image(systemName: "xmark")
                             .foregroundColor(.black)
                     }
+                }
+            }
+            .fullScreenCover(isPresented: $didSubmitSuccessfully) {
+                ReviewSubmittedView{
+                    dismiss()
                 }
             }
         }

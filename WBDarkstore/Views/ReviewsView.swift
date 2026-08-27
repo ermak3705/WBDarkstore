@@ -10,6 +10,7 @@ import WBDesignSystemKit
 
 struct ReviewsView: View {
     let detail: ProductDetail
+    @Environment(ServiceLocator.self ) private var services
     @Environment(\.dismiss) private var dismiss
     @State private var showWriteReview = false
 
@@ -143,7 +144,11 @@ struct ReviewsView: View {
                 .padding(16)
             }
             .navigationBarHidden(true)
-            .sheet(isPresented: $showWriteReview) {
+            .sheet(isPresented: $showWriteReview, onDismiss: {
+                Task {
+                    await services.productService.loadProductDetail(id: detail.id)
+                }
+            }) {
                 WriteReviewView(detail: detail)
             }
         }
