@@ -114,6 +114,9 @@ struct CartView: View {
                 }
             }
             .navigationTitle("Корзина")
+            .errorAlert(services.cartService.error) {
+                services.cartService.error = nil
+            }
         }
     }
 }

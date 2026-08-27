@@ -20,6 +20,8 @@ final class ServiceLocator {
     let productService: ProductsService
     let cartService: CartService
     let favoritesService: FavoritesService
+    let addressService: AddressService
+    let orderService: OrderService
     
     init() {
         let client: Client
@@ -37,5 +39,7 @@ final class ServiceLocator {
         self.productService = ProductsService(client: client)
         self.cartService = CartService(client: client)
         self.favoritesService = FavoritesService(client: client)
+        self.addressService = AddressService(client: client)
+        self.orderService = OrderService(client: client)
     }
 }

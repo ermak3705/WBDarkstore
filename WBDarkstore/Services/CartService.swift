@@ -8,14 +8,16 @@
 import Foundation
 import OpenAPIRuntime
 import OpenAPIURLSession
+import SwiftData
 
 @Observable
 final class CartService {
     private let client: Client
+    private let modelContainer: ModelContainer
 
     private(set) var items: [CartItem] = []
     private(set) var isLoading = false
-    private(set) var error: Error?
+    var error: Error?
 
     var totalPrice: Int {
         items.reduce(0) { $0 + $1.price * $1.quantity }
@@ -25,14 +27,56 @@ final class CartService {
         items.reduce(0) { $0 + $1.quantity }
     }
 
+    private func restoreFromCache() {
+        let context = ModelContext(modelContainer)
+        let descriptor = FetchDescriptor<CachedCartItem>(
+            sortBy: [SortDescriptor(\.sortOrder)]
+        )
+        if let cached = try? context.fetch(descriptor), !cached.isEmpty {
+            items = cached.map { entity in
+                CartItem(
+                    id: entity.id,
+                    title: entity.title,
+                    price: entity.price,
+                    imageURL: entity.imageURLString.flatMap(URL.init(string:)),
+                    quantity: entity.quantity
+                )
+            }
+        }
+    }
+
+    private func saveToCache() {
+        let context = ModelContext(modelContainer)
+        try? context.delete(model: CachedCartItem.self)
+        for (index, item) in items.enumerated() {
+            context.insert(
+                CachedCartItem(
+                    id: item.id,
+                    title: item.title,
+                    price: item.price,
+                    imageURLString: item.imageURL?.absoluteString,
+                    quantity: item.quantity,
+                    sortOrder: index
+                )
+            )
+        }
+        try? context.save()
+    }
+
     init(client: Client) {
         self.client = client
+        do {
+            self.modelContainer = try ModelContainer(for: CachedCartItem.self)
+        } catch {
+            fatalError("Не удалось создать локальное хранилище корзины: \(error)")
+        }
+        restoreFromCache()
     }
 
     func loadCart() async {
-        defer { isLoading = false }
         isLoading = true
         error = nil
+        defer { isLoading = false }
 
         do {
             let response = try await client.getCart()
@@ -48,7 +92,6 @@ final class CartService {
                         quantity: item.value1.quantity
                     )
                 }
-                // пытаюсь починить порядок добавления при увеличении счетчика товара в корзине 
                 var orderedItems: [CartItem] = []
                 for existingItem in items {
                     if let updated = newItems.first(where: { $0.id == existingItem.id }) {
@@ -61,6 +104,7 @@ final class CartService {
                     }
                 }
                 items = orderedItems
+                saveToCache()
 
             case .unauthorized(_):
                 error = APIError.unauthorized
