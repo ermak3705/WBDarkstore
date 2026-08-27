@@ -104,7 +104,7 @@ struct WriteReviewView: View {
                 rating: rating,
                 content: comment
             )
-            didSubmitSuccessfully = true 
+            didSubmitSuccessfully = true
         } catch {
             errorMessage = "Не удалось отправить отзыв. Попробуйте ещё раз."
         }
