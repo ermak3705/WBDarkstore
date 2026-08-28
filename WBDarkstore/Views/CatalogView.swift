@@ -24,7 +24,10 @@ struct CatalogView: View {
             if services.categoryService.isLoading {
                 ProgressView()
                     .padding(.top, 40)
-            } else {
+            } else if services.categoryService.error != nil && services.categoryService.categories.isEmpty {
+                errorView
+            }
+            else {
                 categoriesGrid
             }
         }
@@ -40,6 +43,41 @@ struct CatalogView: View {
         .padding(.bottom, 60)
     }
 
+    private var errorView: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "wifi.slash")
+                .font(.system(size: 40))
+                .foregroundColor(.gray)
+            Spacer()
+            
+            Text("Не удалось загрузить товары")
+                .font(DSTypography.body)
+                .foregroundColor(DSColors.textPrimary)
+            Spacer()
+            
+            Text("Проверьте подключение к интернету и попробуйте ещё раз")
+                .font(DSTypography.price)
+                .foregroundColor(DSColors.textSecondary)
+                .multilineTextAlignment(.center)
+            
+            Spacer()
+            
+            Button("Повторить") {
+                Task {
+                    await services.categoryService.loadCategories()
+                }
+            }
+            .font(DSTypography.price)
+            .foregroundColor(.white)
+            .padding(.horizontal, 24)
+            .padding(.vertical, 12)
+            .background(DSGradients.violet)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .padding(.top, 60)
+        .padding(.horizontal, 32)
+    }
+    
     private func categoryCard(for category: Category) -> some View {
         NavigationLink(value: category) {
             RoundedRectangle(cornerRadius: 14)
