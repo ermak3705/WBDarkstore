@@ -9,11 +9,22 @@ import SwiftUI
 import WBDesignSystemKit
 
 struct ReviewsView: View {
-    let detail: ProductDetail
+    private let productId: String
+    private let initialDetail: ProductDetail
+    
     @Environment(ServiceLocator.self ) private var services
     @Environment(\.dismiss) private var dismiss
     @State private var showWriteReview = false
 
+    init(detail: ProductDetail) {
+        self.productId = detail.id
+        self.initialDetail = detail
+    }
+    
+    private var detail: ProductDetail {
+        services.productService.productDetail ?? initialDetail
+    }
+    
     private var summary: ReviewsSummary {
         ReviewsSummary(reviews: detail.reviews)
     }
@@ -146,7 +157,7 @@ struct ReviewsView: View {
             .navigationBarHidden(true)
             .sheet(isPresented: $showWriteReview, onDismiss: {
                 Task {
-                    await services.productService.loadProductDetail(id: detail.id)
+                    await services.productService.loadProductDetail(id: productId)
                 }
             }) {
                 WriteReviewView(detail: detail)
