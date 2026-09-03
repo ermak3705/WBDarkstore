@@ -38,7 +38,7 @@ struct ProductDetailView: View {
                 HStack (spacing: 4) {
                     Image(systemName: "message")
                         .font(.system(size: 12))
-                    Text("\(summary.totalCount) отзыв >")
+                    Text("\(summary.totalCount) \(summary.totalCount.pluralized(one: "отзыв", few: "отзыва", many: "отзывов"))")
                         .font(.system(size: 16,weight: .regular))
                 }
             }
