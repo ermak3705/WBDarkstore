@@ -8,6 +8,7 @@ import Foundation
 import SwiftUI
 import WBDesignSystemKit
 
+
 struct CatalogView: View {
     @Environment(ServiceLocator.self) private var services
     @State private var showSearch = false
@@ -169,7 +170,7 @@ struct CatalogView: View {
 
     private var checkoutButton: some View {
         Button {
-            // работа кнопки позже
+            services.selectedTab = .cart
         } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 0) {

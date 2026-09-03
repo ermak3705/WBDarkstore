@@ -108,12 +108,11 @@ struct CategoryProductsView: View {
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(Color.gray.opacity(0.3), lineWidth: 1)
                     }
-                    //.shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
                 }
 
                 if !services.cartService.items.isEmpty {
                     Button {
-                        // логика оформления позже
+                        services.selectedTab = .cart
                     } label: {
                         HStack {
                             VStack(alignment: .leading, spacing: 0) {
@@ -155,4 +154,12 @@ struct CategoryProductsView: View {
             SearchView(productsService: services.productService)
         }
     }
+}
+
+#Preview {
+    CategoryProductsView(
+        category: Category(id: "1", name: "Выпечка", imageURL: nil),
+        client: try! APIClientFactory.makeClient(token: Secrets.apiToken)
+    )
+    .environment(ServiceLocator())
 }

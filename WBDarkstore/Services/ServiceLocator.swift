@@ -9,6 +9,12 @@ import Foundation
 import OpenAPIRuntime
 import OpenAPIURLSession
 
+enum AppTab: Hashable {
+    case catalog
+    case favorites
+    case cart
+}
+
 @Observable
 final class ServiceLocator {
     
@@ -22,6 +28,7 @@ final class ServiceLocator {
     let favoritesService: FavoritesService
     let addressService: AddressService
     let orderService: OrderService
+    var selectedTab: AppTab = .catalog
     
     init() {
         let client: Client

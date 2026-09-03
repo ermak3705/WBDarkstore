@@ -38,6 +38,7 @@ final class CartService {
                     id: entity.id,
                     title: entity.title,
                     price: entity.price,
+                    weight: entity.weight,
                     imageURL: entity.imageURLString.flatMap(URL.init(string:)),
                     quantity: entity.quantity
                 )
@@ -54,6 +55,7 @@ final class CartService {
                     id: item.id,
                     title: item.title,
                     price: item.price,
+                    weight: item.weight,
                     imageURLString: item.imageURL?.absoluteString,
                     quantity: item.quantity,
                     sortOrder: index
@@ -88,6 +90,7 @@ final class CartService {
                         id: item.value1.id,
                         title: item.value1.name,
                         price: item.value1.price,
+                        weight: item.value1.weight,
                         imageURL: URL(string: item.value1.image),
                         quantity: item.value1.quantity
                     )

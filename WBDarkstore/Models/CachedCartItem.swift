@@ -13,6 +13,7 @@ final class CachedCartItem {
     @Attribute(.unique) var id: String
     var title: String
     var price: Int
+    var weight = 0 
     var imageURLString: String?
     var quantity: Int
     var sortOrder: Int
@@ -21,6 +22,7 @@ final class CachedCartItem {
         id: String,
         title: String,
         price: Int,
+        weight: Int,
         imageURLString: String?,
         quantity: Int,
         sortOrder: Int
@@ -28,6 +30,7 @@ final class CachedCartItem {
         self.id = id
         self.title = title
         self.price = price
+        self.weight = weight
         self.imageURLString = imageURLString
         self.quantity = quantity
         self.sortOrder = sortOrder
