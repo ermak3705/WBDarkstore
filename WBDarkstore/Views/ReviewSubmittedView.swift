@@ -60,15 +60,19 @@ struct ReviewSubmittedView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.bottom, 32)
 
-                Button("Закрыть", action: onClose)
-                    .font(.system(size: 20, weight: .medium))
-                    .foregroundColor(.purple)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 50)
-                    .background(Color.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 24)
+                Button {
+                    onClose()
+                } label: {
+                    Text("Закрыть")
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundColor(.purple)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 24)
             }
         }
     }
