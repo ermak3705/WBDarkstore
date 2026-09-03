@@ -9,9 +9,12 @@ import SwiftUI
 import WBDesignSystemKit
 
 struct CartView: View {
+    
+    @State private var showAddressList = false
+    @State private var showOrderPlaced = false
+    
     @Environment(ServiceLocator.self) private var services
-    @State private var refreshID = UUID()
-
+    
     private var itemsList: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 4) {
@@ -36,7 +39,7 @@ struct CartView: View {
                 .fill(DSColors.background)
                 .frame(width: 100, height: 100)
                 .overlay {
-                    AsyncImage(url: item.imageURL) { phase in
+                    CachedAsyncImage(url: item.imageURL) { phase in
                         switch phase {
                         case .success(let image):
                             image
@@ -51,7 +54,6 @@ struct CartView: View {
                             EmptyView()
                         }
                     }
-                    .id("\(item.id)-\(refreshID)")
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 12))
 
@@ -63,10 +65,15 @@ struct CartView: View {
                         .font(DSTypography.rubIcon)
                 }
                 .foregroundColor(DSColors.textPrimary)
-
-                Text(item.title)
-                    .font(DSTypography.body)
-                    .foregroundColor(DSColors.textPrimary)
+                
+                HStack(spacing: 4) {
+                    Text(item.title)
+                        .font(DSTypography.body)
+                        .foregroundColor(DSColors.textPrimary)
+                    Text("· \(item.weight) г")
+                        .font(DSTypography.body)
+                        .foregroundColor(DSColors.textSecondary)
+                }
 
                 DSStepper(
                     quantity: item.quantity,
@@ -98,8 +105,9 @@ struct CartView: View {
             .padding(.horizontal, 16)
 
             DSButton(title: "Оформить заказ") {
-                // Логика
+                Task {await placeOrder() }
             }
+            .disabled(services.addressService.selectedAddressID == nil || services.orderService.isCreatingOrder)
             .padding(.horizontal, 16)
         }
         .padding(.top, 12)
@@ -107,18 +115,105 @@ struct CartView: View {
         .background(DSColors.background)
     }
 
+    private var selectedAddressRow: some View {
+        Button {
+            showAddressList = true
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "mappin.circle.fill")
+                    .font(.system(size: 20))
+                    .foregroundColor(.purple)
+
+                if let address = services.addressService.addresses.first(where: {
+                    $0.id == services.addressService.selectedAddressID
+                }) {
+                    Text(address.addressLine)
+                        .font(DSTypography.addressTypography)
+                        .foregroundColor(DSColors.textPrimary)
+                        .lineLimit(1)
+                } else {
+                    Text("Выбрать адрес доставки")
+                        .font(DSTypography.addressTypography)
+                        .foregroundColor(DSColors.textSecondary)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(DSColors.textSecondary)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(DSColors.secondaryBackground)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var paymentMethodRow: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "creditcard.fill")
+                .font(.system(size: 20))
+                .foregroundColor(DSColors.textSecondary)
+            Text("Оплата картой")
+                .font(DSTypography.addressTypography)
+                .foregroundColor(DSColors.textPrimary)
+            Spacer()
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(DSColors.secondaryBackground)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+    
+    private func placeOrder() async {
+        guard let addressID = services.addressService.selectedAddressID else {return}
+        
+        let success = await services.orderService.createOrder(addressID: addressID)
+        if success {
+            await services.cartService.loadCart()
+            showOrderPlaced = true
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
                 itemsList
                 if !services.cartService.items.isEmpty {
+                    VStack(spacing: 12) {
+                        selectedAddressRow
+                        paymentMethodRow
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 16)
+                    
                     checkoutSection
                 }
             }
             .navigationTitle("Корзина")
-            .onAppear {
-                refreshID = UUID()
+            .errorAlert(services.cartService.error) {
+                services.cartService.error = nil
             }
+        }
+        .sheet(isPresented: $showAddressList) {
+            AddressListView()
+        }
+        .fullScreenCover(isPresented: $showOrderPlaced) {
+            OrderPlacedView {
+                showOrderPlaced = false
+            }
+        }
+        .errorAlert(services.addressService.error) {
+            services.addressService.error = nil
+        }
+        .errorAlert(services.orderService.error) {
+            services.orderService.error = nil
+        }
+        .task {
+            await services.cartService.loadCart()
+            await services.addressService.loadAddresses()
         }
     }
 }

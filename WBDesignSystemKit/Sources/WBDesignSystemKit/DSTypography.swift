@@ -16,4 +16,7 @@ public enum DSTypography {
     public static let body = Font.system(size: 14, weight: .regular)
     public static let priceButton = Font.system(size: 20, weight: .medium)
     public static let rubIcon = Font.system(size: 14, weight: .semibold)
+    public static let privestiSudaButton = Font.system(size: 20, weight: .semibold)
+    public static let addressTypography = Font.system(size: 17, weight: .medium)
+    public static let underCheckmark = Font.system(size: 56, weight: .medium)
 }
