@@ -41,7 +41,10 @@ final class ProductsService {
                         id: item.id,
                         title: item.name,
                         price: item.price,
-                        imageURL: URL(string: item.image)
+                        imageURL: URL(string: item.image),
+                        rating: Double(item.rating),
+                        reviewCount: item.reviewCount,
+                        weight: Int(item.weight)
                     )
                 }
             case .unauthorized(_):
@@ -72,7 +75,17 @@ final class ProductsService {
                     title: item.name,
                     description: item.description,
                     price: item.price,
-                    imageURL: URL(string: item.image)
+                    imageURL: URL(string: item.image),
+                    rating: Double(item.rating),
+                    reviews: item.reviews?.map { review in
+                        Review(
+                            rating: review.rating,
+                            author: review.author,
+                            createdAt: review.createdAt,
+                            content: review.content
+                        )
+                    } ?? [],
+                    weight: Int(item.weight)
                 )
             case .unauthorized(_):
                 error = APIError.unauthorized
@@ -83,6 +96,23 @@ final class ProductsService {
             }
         } catch {
             self.error = error
+        }
+    }
+    
+    func submitReview(productId: String, rating: Int, content: String) async throws {
+        let response = try await client.postProductsIdReviews(
+            path: .init(id: productId),
+            body: .json(.init(rating: rating, content: content, images: []))
+        )
+        switch response {
+        case .ok:
+            return
+        case .badRequest(_):
+            throw APIError.unexpected
+        case .unauthorized(_):
+            throw APIError.unauthorized
+        case .default(statusCode: _, _):
+            throw APIError.unexpected
         }
     }
 }

@@ -22,7 +22,12 @@ final class ServiceLocator {
     let favoritesService: FavoritesService
     
     init() {
-        let client = try! APIClientFactory.makeClient(token: Secrets.apiToken)
+        let client: Client
+        do {
+            client = try APIClientFactory.makeClient(token: Secrets.apiToken)
+        } catch {
+            fatalError("Не удалось создать API-клиент: \(error)")
+        }
         
         self.client = client
         self.router = Router()
@@ -30,7 +35,7 @@ final class ServiceLocator {
         self.userService = UserService(client: client)
         self.categoryService = CategoriesService(client: client)
         self.productService = ProductsService(client: client)
-        self.cartService = CartService()
-        self.favoritesService = FavoritesService()
+        self.cartService = CartService(client: client)
+        self.favoritesService = FavoritesService(client: client)
     }
 }

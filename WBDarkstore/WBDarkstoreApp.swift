@@ -17,6 +17,7 @@ struct WBDarkstoreApp: App {
             MainTabView()
                 .environment(services.router)
                 .environment(services)
+                .preferredColorScheme(.light)
         }
     }
 }

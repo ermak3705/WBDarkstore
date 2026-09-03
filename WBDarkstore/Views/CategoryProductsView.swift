@@ -115,7 +115,7 @@ struct CategoryProductsView: View {
             ProductDetailView(productId: product.id)
         }
         .sheet(isPresented: $showSearch) {
-            SearchView(client: client)
+            SearchView(productsService: services.productService)
         }
     }
 }

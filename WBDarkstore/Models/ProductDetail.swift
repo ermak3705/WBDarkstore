@@ -13,4 +13,7 @@ struct ProductDetail: Identifiable {
     var description: String
     var price: Int
     var imageURL: URL?
+    var rating: Double
+    var reviews: [Review]
+    var weight: Int 
 }

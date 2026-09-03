@@ -13,4 +13,7 @@ struct Product: Identifiable, Hashable {
     var title: String
     var price: Int
     var imageURL: URL?
+    var rating: Double
+    var reviewCount: Int
+    var weight: Int 
 }

@@ -170,7 +170,7 @@ struct CatalogView: View {
         }
         .navigationTitle("Категории")
         .sheet(isPresented: $showSearch) {
-            SearchView(client: services.client)
+            SearchView(productsService: services.productService)
         }
     }
 }

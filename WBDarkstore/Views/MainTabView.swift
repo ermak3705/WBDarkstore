@@ -32,6 +32,11 @@ struct MainTabView: View {
                     Label("Корзина", systemImage: "cart")
                 }
         }
+        .task {
+            async let cart: Void = services.cartService.loadCart()
+            async let favorites: Void = services.favoritesService.loadFavorites()
+            _ = await (cart, favorites)
+        }
     }
 }
 

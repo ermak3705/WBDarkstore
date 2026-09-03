@@ -9,12 +9,8 @@ import Foundation
 
 struct CartItem: Identifiable {
     let id: String
-    let product: Product
+    var title: String
+    var price: Int
+    var imageURL: URL?
     var quantity: Int
-
-    init(product: Product, quantity: Int = 1) {
-        self.id = product.id
-        self.product = product
-        self.quantity = quantity
-    }
 }
