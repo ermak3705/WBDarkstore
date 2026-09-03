@@ -13,11 +13,15 @@ struct Review: Identifiable {
     var author: String
     var createdAt: Date
     var content: String
-
-    var formattedDate: String {
+    
+    private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ru_RU")
         formatter.dateFormat = "d MMMM"
-        return formatter.string(from: createdAt)
+        return formatter
+    }()
+    
+    var formattedDate: String {
+        Self.dateFormatter.string(from: createdAt)
     }
 }
