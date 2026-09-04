@@ -180,16 +180,21 @@ struct CartView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                itemsList
-                if !services.cartService.items.isEmpty {
-                    VStack(spacing: 12) {
-                        selectedAddressRow
-                        paymentMethodRow
+                if services.cartService.isLoading && services.cartService.items.isEmpty {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    itemsList
+                    if !services.cartService.items.isEmpty {
+                        VStack(spacing: 12) {
+                            selectedAddressRow
+                            paymentMethodRow
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.top, 16)
+                        
+                        checkoutSection
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 16)
-                    
-                    checkoutSection
                 }
             }
             .navigationTitle("Корзина")
