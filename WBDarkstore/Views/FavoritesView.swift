@@ -31,7 +31,10 @@ struct FavoritesView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                if services.favoritesService.products.isEmpty {
+                if services.favoritesService.isLoading && services.favoritesService.products.isEmpty {
+                    ProgressView()
+                        .padding(.top, 100)
+                } else if services.favoritesService.products.isEmpty {
                     emptyState
                 } else {
                     LazyVGrid(columns: columns, spacing: 16) {
