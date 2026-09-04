@@ -7,8 +7,7 @@
 
 import UIKit
 
-@MainActor
-final class ImageCache {
+actor ImageCache {
     static let shared = ImageCache()
 
     private let memoryCache = NSCache<NSString, UIImage>()

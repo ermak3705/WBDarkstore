@@ -24,7 +24,7 @@ struct CachedAsyncImage<Content: View>: View {
             return
         }
 
-        if let cached = ImageCache.shared.image(for: url) {
+        if let cached = await ImageCache.shared.image(for: url) {
             phase = .success(Image(uiImage: cached))
             return
         }
@@ -35,7 +35,7 @@ struct CachedAsyncImage<Content: View>: View {
                 phase = .failure(URLError(.cannotDecodeContentData))
                 return
             }
-            ImageCache.shared.store(data: data, image: uiImage, for: url)
+            await ImageCache.shared.store(data: data, image: uiImage, for: url)
             phase = .success(Image(uiImage: uiImage))
         } catch {
             phase = .failure(error)
