@@ -18,6 +18,7 @@ public enum DSColors {
     public static let textPrimary = Color.black
     public static let textSecondary = Color.gray
     public static let error = Color.red
+    public static let loaderBackground = Color(hex: "#9A10F0")
 }
 
 public extension Color {
