@@ -100,11 +100,11 @@ struct ReviewsView: View {
             showWriteReview = true
         } label: {
             Text("Написать отзыв")
-                .font(.system(size: 20,weight: .semibold))
+                .font(DSTypography.privestiSudaButton)
                 .foregroundColor(.black)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
-                .background(Color(uiColor: .systemGray6))
+                .background(DSGradients.smoky)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
         }
     }
