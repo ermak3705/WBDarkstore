@@ -212,6 +212,20 @@ struct CartView: View {
         }
     }
     
+    private var activeError: Error? {
+        services.cartService.error ?? services.addressService.error ?? services.orderService.error
+    }
+
+    private func resetActiveError() {
+        if services.cartService.error != nil {
+            services.cartService.resetError()
+        } else if services.addressService.error != nil {
+            services.addressService.error = nil
+        } else if services.orderService.error != nil {
+            services.orderService.resetError()
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -233,9 +247,6 @@ struct CartView: View {
                 }
             }
             .navigationTitle("Корзина")
-            .errorAlert(services.cartService.error) {
-                services.cartService.error = nil
-            }
         }
         .sheet(isPresented: $showAddressList) {
             AddressListView()
@@ -251,12 +262,8 @@ struct CartView: View {
                 OrderDetailView(order: order)
             }
         }
-        
-        .errorAlert(services.addressService.error) {
-            services.addressService.error = nil
-        }
-        .errorAlert(services.orderService.error) {
-            services.orderService.error = nil
+        .errorAlert(activeError) {
+            resetActiveError()
         }
         .task {
             await services.cartService.loadCart()

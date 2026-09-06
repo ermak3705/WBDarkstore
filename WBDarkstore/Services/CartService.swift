@@ -15,7 +15,7 @@ final class CartService {
 
     private(set) var items: [CartItem] = []
     private(set) var isLoading = false
-    var error: Error?
+    private(set) var error: Error?
 
     var totalPrice: Int {
         items.reduce(0) { $0 + $1.price * $1.quantity }
@@ -73,5 +73,9 @@ final class CartService {
         } catch {
             self.error = error
         }
+    }
+    
+    func resetError() {
+        error = nil 
     }
 }

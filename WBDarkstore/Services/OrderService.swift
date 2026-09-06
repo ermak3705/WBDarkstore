@@ -16,7 +16,7 @@ final class OrderService {
     private(set) var orders: [Order] = []
     private(set) var isLoading = false
     private(set) var isCreatingOrder = false
-    var error: Error?
+    private(set) var error: Error?
 
     init(client: Client) {
         self.client = client
@@ -88,5 +88,9 @@ final class OrderService {
             self.error = error
         }
         return false
+    }
+    
+    func resetError() {
+        error = nil 
     }
 }
