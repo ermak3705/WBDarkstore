@@ -11,6 +11,7 @@ struct CartItem: Identifiable {
     let id: String
     var title: String
     var price: Int
+    var weight: Int 
     var imageURL: URL?
     var quantity: Int
 }

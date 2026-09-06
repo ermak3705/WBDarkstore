@@ -18,7 +18,7 @@ struct ProductCard: View {
                 .fill(Color.white)
                 .aspectRatio(1, contentMode: .fit)
                 .overlay {
-                    AsyncImage(url: product.imageURL) { phase in
+                    CachedAsyncImage(url: product.imageURL) { phase in
                         switch phase {
                         case .success(let image):
                             image

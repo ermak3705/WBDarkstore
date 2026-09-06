@@ -27,12 +27,49 @@ struct CategoryProductsView: View {
         _productsService = State(initialValue: ProductsService(client: client))
     }
 
+    private var errorView: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "wifi.slash")
+                .font(.system(size: 40))
+                .foregroundColor(.gray)
+            Spacer()
+            
+            Text("Не удалось загрузить товары")
+                .font(DSTypography.body)
+                .foregroundColor(DSColors.textPrimary)
+            Spacer()
+            
+            Text("Проверьте подключение к интернету и попробуйте ещё раз")
+                .font(DSTypography.price)
+                .foregroundColor(DSColors.textSecondary)
+                .multilineTextAlignment(.center)
+            
+            Spacer()
+            
+            Button("Повторить") {
+                Task {
+                    await productsService.loadProducts(category: category.id)
+                }
+            }
+            .font(DSTypography.price)
+            .foregroundColor(.white)
+            .padding(.horizontal, 24)
+            .padding(.vertical, 12)
+            .background(DSGradients.violet)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .padding(.top, 60)
+        .padding(.horizontal, 32)
+    }
+    
     var body: some View {
         ZStack(alignment: .bottom) {
             ScrollView {
                 if productsService.isLoading {
                     ProgressView()
                         .padding(.top, 40)
+                } else if productsService.error != nil && productsService.products.isEmpty {
+                    errorView
                 } else {
                     LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(productsService.products) { product in
@@ -71,12 +108,11 @@ struct CategoryProductsView: View {
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(Color.gray.opacity(0.3), lineWidth: 1)
                     }
-                    //.shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 2)
                 }
 
                 if !services.cartService.items.isEmpty {
                     Button {
-                        // логика оформления позже
+                        services.selectedTab = .cart
                     } label: {
                         HStack {
                             VStack(alignment: .leading, spacing: 0) {
@@ -118,4 +154,12 @@ struct CategoryProductsView: View {
             SearchView(productsService: services.productService)
         }
     }
+}
+
+#Preview {
+    CategoryProductsView(
+        category: Category(id: "1", name: "Выпечка", imageURL: nil),
+        client: try! APIClientFactory.makeClient(token: Secrets.apiToken)
+    )
+    .environment(ServiceLocator())
 }

@@ -25,7 +25,7 @@ struct WriteReviewView: View {
                 .fill(Color(uiColor: .systemGray6))
                 .frame(width: 60, height: 60)
                 .overlay {
-                    AsyncImage(url: detail.imageURL) { phase in
+                    CachedAsyncImage(url: detail.imageURL) { phase in
                         if case .success(let image) = phase {
                             image.resizable().aspectRatio(contentMode: .fill)
                         }

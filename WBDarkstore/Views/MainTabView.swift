@@ -11,7 +11,9 @@ struct MainTabView: View {
     @Environment(ServiceLocator.self) private var services
     
     var body: some View {
-        TabView {
+        @Bindable var bindableServices = services
+        
+        TabView(selection: $bindableServices.selectedTab) {
             NavigationStack {
                 CatalogView()
                     .navigationDestination(for: Category.self) { category in
@@ -21,16 +23,19 @@ struct MainTabView: View {
             .tabItem {
                 Label("Каталог", systemImage: "square.grid.2x2")
             }
+            .tag(AppTab.catalog)
             
             FavoritesView()
                 .tabItem {
                     Label("Избранное", systemImage: "heart")
                 }
+                .tag(AppTab.favorites)
             
             CartView()
                 .tabItem {
                     Label("Корзина", systemImage: "cart")
                 }
+                .tag(AppTab.cart)
         }
         .task {
             async let cart: Void = services.cartService.loadCart()
