@@ -10,6 +10,7 @@ import Foundation
 enum OrderStatus: String, Hashable {
     case active
     case completed
+    case canceled
 }
 
 struct OrderItem: Identifiable, Hashable {

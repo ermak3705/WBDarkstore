@@ -56,8 +56,14 @@ public enum DSGradients {
     
     public static let smoky = LinearGradient(
         colors: [
-            Color(hex: "#9797AF").opacity(0.2),
-            Color(hex: "#000000")
+            Color(hex: "#FEF1FB"),
+            Color(hex: "#FDF1FC"),
+            Color(hex: "#FCF0FC"),
+            Color(hex: "#FBF0FD"),
+            Color(hex: "#F9EFFD"),
+            Color(hex: "#F8EEFE"),
+            Color(hex: "#F6EEFE"),
+            Color(hex: "#F4EDFF")
         ],
         startPoint: .leading,
         endPoint: .trailing
