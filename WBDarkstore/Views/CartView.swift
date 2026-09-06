@@ -33,7 +33,7 @@ struct CartView: View {
     private var itemsList: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 4) {
-                Text("\(services.cartService.totalCount) товара")
+                Text("\(services.cartService.totalCount) \(services.cartService.totalCount.pluralized(one: "товар", few: "товара", many: "товаров"))")
                     .font(DSTypography.body)
                     .foregroundColor(DSColors.textSecondary)
 
@@ -101,7 +101,7 @@ struct CartView: View {
             Spacer()
         }
     }
-
+    
     private var checkoutSection: some View {
         VStack(spacing: 12) {
             HStack {
@@ -129,23 +129,40 @@ struct CartView: View {
         .padding(.bottom, 8)
         .background(DSColors.background)
     }
-
+    
+    private func addressLines(for address: Address) -> (main: String, details: String?) {
+        guard let lastCommaIndex = address.addressLine.lastIndex(of: ",") else {
+            return (address.addressLine, nil)
+        }
+        let main = String(address.addressLine[..<lastCommaIndex])
+        let details = address.addressLine[address.addressLine.index(after: lastCommaIndex)...]
+            .trimmingCharacters(in: .whitespaces)
+        return (main, details.isEmpty ? nil : details)
+    }
+    
     private var selectedAddressRow: some View {
         Button {
             showAddressList = true
         } label: {
             HStack(spacing: 12) {
-                Image(systemName: "mappin.circle.fill")
-                    .font(.system(size: 20))
-                    .foregroundColor(.purple)
 
                 if let address = services.addressService.addresses.first(where: {
                     $0.id == services.addressService.selectedAddressID
                 }) {
-                    Text(address.addressLine)
-                        .font(DSTypography.addressTypography)
-                        .foregroundColor(DSColors.textPrimary)
-                        .lineLimit(1)
+                    let lines = addressLines(for: address)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(lines.main)
+                            .font(DSTypography.addressTypographyCart)
+                            .foregroundColor(DSColors.textPrimary)
+                            .lineLimit(1)
+
+                        if let details = lines.details {
+                            Text(details)
+                                .font(DSTypography.body)
+                                .foregroundColor(DSColors.textPrimary)
+                                .lineLimit(1)
+                        }
+                    }
                 } else {
                     Text("Выбрать адрес доставки")
                         .font(DSTypography.addressTypography)
@@ -155,12 +172,12 @@ struct CartView: View {
                 Spacer()
 
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(DSColors.textSecondary)
+                    .font(DSTypography.headline)
+                    .foregroundColor(DSColors.textPrimary)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
-            .background(DSColors.secondaryBackground)
+            .background(DSGradients.smoky)
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .buttonStyle(.plain)
@@ -168,17 +185,17 @@ struct CartView: View {
 
     private var paymentMethodRow: some View {
         HStack(spacing: 12) {
-            Image(systemName: "creditcard.fill")
-                .font(.system(size: 20))
-                .foregroundColor(DSColors.textSecondary)
-            Text("Оплата картой")
-                .font(DSTypography.addressTypography)
+            Text("Оплата SberPay")
+                .font(DSTypography.addressTypographyCart)
                 .foregroundColor(DSColors.textPrimary)
             Spacer()
+            Image(systemName: "chevron.right")
+                .font(DSTypography.headline)
+                .foregroundColor(DSColors.textPrimary)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
-        .background(DSColors.secondaryBackground)
+        .background(DSGradients.smoky)
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
     
@@ -224,7 +241,7 @@ struct CartView: View {
             AddressListView()
         }
         
-        .sheet(item: $orderFlowStep) { step in
+        .fullScreenCover(item: $orderFlowStep) { step in
             switch step {
             case .placed(let order):
                 OrderPlacedView {
