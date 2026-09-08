@@ -8,25 +8,12 @@
 import SwiftUI
 import WBDesignSystemKit
 
-private enum OrderFlowStep: Identifiable {
-    case placed(Order)
-    case detail(Order)
 
-    var id: String {
-        switch self {
-        case .placed(let order), .detail(let order):
-            return order.id
-        }
-    }
-}
 
 struct CartView: View {
     
     @State private var showAddressList = false
     @State private var showOrderPlaced = false
-    @State private var showOrderDetail = false
-    @State private var placedOrder: Order?
-    @State private var orderFlowStep: OrderFlowStep?
     
     @Environment(ServiceLocator.self) private var services
     
@@ -206,9 +193,7 @@ struct CartView: View {
         if success {
             await services.cartService.loadCart()
             await services.orderService.loadOrders()
-            if let order = services.orderService.orders.first {
-                orderFlowStep = .placed(order)
-            }
+            showOrderPlaced = true
         }
     }
     
@@ -252,14 +237,11 @@ struct CartView: View {
             AddressListView()
         }
         
-        .fullScreenCover(item: $orderFlowStep) { step in
-            switch step {
-            case .placed(let order):
-                OrderPlacedView {
-                    orderFlowStep = .detail(order)
-                }
-            case .detail(let order):
-                OrderDetailView(order: order)
+        .fullScreenCover(isPresented: $showOrderPlaced, onDismiss: {
+            services.selectedTab = .orders
+        }) {
+            OrderPlacedView {
+                showOrderPlaced = false
             }
         }
         .errorAlert(activeError) {

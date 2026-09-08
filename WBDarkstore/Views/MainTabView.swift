@@ -36,6 +36,12 @@ struct MainTabView: View {
                     Label("Корзина", systemImage: "cart")
                 }
                 .tag(AppTab.cart)
+            
+            OrderListView()
+                .tabItem {
+                    Label("Мои заказы", systemImage: "list.bullet.rectangle")
+                }
+                .tag(AppTab.orders)
         }
         .task {
             async let cart: Void = services.cartService.loadCart()
