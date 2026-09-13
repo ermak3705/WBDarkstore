@@ -193,14 +193,15 @@ struct CartView: View {
         if success {
             await services.cartService.loadCart()
             await services.orderService.loadOrders()
-            showOrderPlaced = true
-        }
+            withAnimation(.spring(response: 0.45, dampingFraction: 0.62)) {
+                showOrderPlaced = true
+            }        }
     }
     
     private var activeError: Error? {
         services.cartService.error ?? services.addressService.error ?? services.orderService.error
     }
-
+    
     private func resetActiveError() {
         if services.cartService.error != nil {
             services.cartService.resetError()
@@ -212,41 +213,57 @@ struct CartView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                if services.cartService.isLoading && services.cartService.items.isEmpty {
-                    ProgressView()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else {
-                    itemsList
-                    if !services.cartService.items.isEmpty {
-                        VStack(spacing: 12) {
-                            selectedAddressRow
-                            paymentMethodRow
+        ZStack {
+            NavigationStack {
+                VStack(spacing: 0) {
+                    if services.cartService.isLoading && services.cartService.items.isEmpty {
+                        ProgressView()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    } else {
+                        itemsList
+                        if !services.cartService.items.isEmpty {
+                            VStack(spacing: 12) {
+                                selectedAddressRow
+                                paymentMethodRow
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.top, 16)
+                            
+                            checkoutSection
                         }
-                        .padding(.horizontal, 16)
-                        .padding(.top, 16)
-                        
-                        checkoutSection
                     }
                 }
+                .navigationTitle("Корзина")
             }
-            .navigationTitle("Корзина")
+            
+            if showOrderPlaced {
+                OrderPlacedView {
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        showOrderPlaced = false
+                    }
+                }
+                .transition(
+                    .asymmetric(
+                        insertion: .scale(scale: 0.75).combined(with: .opacity),
+                        removal: .scale(scale: 0.92).combined(with: .opacity)
+                    )
+                )
+                .zIndex(1)
+            }
         }
         .sheet(isPresented: $showAddressList) {
             AddressListView()
         }
         
-        .fullScreenCover(isPresented: $showOrderPlaced, onDismiss: {
-            services.selectedTab = .orders
-            if let newOrder = services.orderService.orders.first {
-                services.router.push(.orderDetail(newOrder))
-            }
-        }) {
-            OrderPlacedView {
-                showOrderPlaced = false
+        .onChange(of: showOrderPlaced) { wasShown, isShown in
+            if wasShown && !isShown {
+                services.selectedTab = .orders
+                if let newOrder = services.orderService.orders.first {
+                    services.router.push(.orderDetail(newOrder))
+                }
             }
         }
+        
         .errorAlert(activeError) {
             resetActiveError()
         }

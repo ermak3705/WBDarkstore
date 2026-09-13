@@ -10,6 +10,8 @@ import WBDesignSystemKit
 
 struct OrderPlacedView: View {
     let onClose: (() -> Void)
+    @State private var checkmarkScale: CGFloat = 0.3
+    @State private var checkmarkOpacity: Double = 0
     
     private var checkmark: some View {
         Image(systemName: "checkmark")
@@ -18,6 +20,8 @@ struct OrderPlacedView: View {
             .fontWeight(.light )
             .foregroundColor(.white )
             .frame (width: 135, height: 135 )
+            .scaleEffect(checkmarkScale)
+            .opacity(checkmarkOpacity)
     }
     
     private var closeButton: some View {
@@ -70,6 +74,14 @@ struct OrderPlacedView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, 24)
+            }
+        }
+        .onAppear {
+            checkmarkScale = 0.3
+            checkmarkOpacity = 0
+            withAnimation(.spring(response: 0.5, dampingFraction: 0.55).delay(0.15)) {
+                checkmarkScale = 1
+                checkmarkOpacity = 1
             }
         }
     }

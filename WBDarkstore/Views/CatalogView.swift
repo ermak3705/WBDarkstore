@@ -18,7 +18,17 @@ struct CatalogView: View {
         .init(.flexible(), spacing: 12),
         .init(.flexible(), spacing: 12)
     ]
-
+    
+    private var activeOrder: Order? {
+        services.orderService.activeOrder
+    }
+    
+    private var deliveryMinutesRemaining: Int? {
+        guard let date = activeOrder?.parsedDeliveryDate else { return nil }
+        let minutes = Calendar.current.dateComponents([.minute], from: Date(), to: date).minute ?? 0
+        return max(minutes, 0)
+    }
+    
     @ViewBuilder
     private var contentView: some View {
         ScrollView {
@@ -132,12 +142,14 @@ struct CatalogView: View {
         }
         .buttonStyle(.plain)
     }
-
+    
     private var bottomToolbar: some View {
         HStack(spacing: 12) {
             searchButton
-
-            if !services.cartService.items.isEmpty {
+            
+            if activeOrder != nil {
+                deliveryStatusButton
+            } else if !services.cartService.items.isEmpty {
                 checkoutButton
             } else {
                 Spacer()
@@ -168,6 +180,40 @@ struct CatalogView: View {
         }
     }
 
+    private var deliveryStatusButton: some View {
+        Button {
+            services.selectedTab = .orders
+            if let activeOrder {
+                services.router.push(.orderDetail(activeOrder))
+            }
+        } label: {
+            HStack(spacing: 8) {
+                Spacer()
+                Image("Racketa")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Доставим")
+                        .font(DSTypography.price)
+                    //так потому что с бэка приходит пустая строка, что было красиво пришлось захардкодить текст
+                    Text("через 12 минут")
+                        .font(DSTypography.body)
+                }
+
+                Spacer()
+            }
+            .foregroundColor(.white)
+            .padding(.horizontal, 16)
+            .frame(height: 50)
+            .background(DSGradients.violet)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .disabled(true)
+        .frame(maxWidth: .infinity)
+    }
+    
     private var checkoutButton: some View {
         Button {
             services.selectedTab = .cart
@@ -215,8 +261,10 @@ struct CatalogView: View {
         }
         .task {
             await services.categoryService.loadCategories()
+            await services.orderService.loadOrders()
+
         }
-        //.navigationTitle("Категории")
+
         .sheet(isPresented: $showSearch) {
             SearchView(productsService: services.productService)
         }
