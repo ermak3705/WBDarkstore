@@ -239,6 +239,9 @@ struct CartView: View {
         
         .fullScreenCover(isPresented: $showOrderPlaced, onDismiss: {
             services.selectedTab = .orders
+            if let newOrder = services.orderService.orders.first {
+                services.router.push(.orderDetail(newOrder))
+            }
         }) {
             OrderPlacedView {
                 showOrderPlaced = false

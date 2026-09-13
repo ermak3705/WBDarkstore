@@ -104,7 +104,7 @@ struct OrderListView: View {
     }
     
     private func orderRow(for order: Order) -> some View {
-        NavigationLink(value: order) {
+        NavigationLink(value: Route.orderDetail(order)) {
             VStack(alignment: .leading, spacing: 10) {
                 HStack(alignment: .top, spacing: 8) {
                     VStack(alignment: .leading, spacing: 4) {
@@ -153,7 +153,8 @@ struct OrderListView: View {
     }
     
     var body: some View {
-        NavigationStack {
+        @Bindable var router = services.router
+        NavigationStack(path: $router.path) {
             Group {
                 if isInitialLoading {
                     ProgressView()
@@ -180,13 +181,14 @@ struct OrderListView: View {
                     }
                 }
             }
-            .navigationDestination(for: Order.self) { order in
-                OrderDetailView(order: order)
-                    .toolbar(.hidden, for: .navigationBar)
-            }
-            .navigationDestination(for: Order.self) { order in
-                OrderDetailView(order: order)
-                    .toolbar(.hidden, for: .navigationBar)
+            .navigationDestination(for: Route.self) { route in
+                switch route {
+                case .orderDetail(let order):
+                    OrderDetailView(order: order)
+                        .toolbar(.hidden, for: .navigationBar)
+                default:
+                    EmptyView()
+                }
             }
         }
         .errorAlert(services.orderService.error) {
