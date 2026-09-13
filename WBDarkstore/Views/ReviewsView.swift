@@ -7,6 +7,14 @@
 
 import SwiftUI
 import WBDesignSystemKit
+enum ReviewSortOption: String, CaseIterable, Identifiable {
+    case dateDescending = "Сначала новые"
+    case dateAscending = "Сначала старые"
+    case ratingDescending = "Сначала лучшие"
+    case ratingAscending = "Сначала худшие"
+    
+    var id: String { rawValue }
+}
 
 struct ReviewsView: View {
     private let productId: String
@@ -15,6 +23,7 @@ struct ReviewsView: View {
     @Environment(ServiceLocator.self ) private var services
     @Environment(\.dismiss) private var dismiss
     @State private var showWriteReview = false
+    @State private var sortOption: ReviewSortOption = .dateDescending
 
     init(detail: ProductDetail) {
         self.productId = detail.id
@@ -29,6 +38,19 @@ struct ReviewsView: View {
         ReviewsSummary(reviews: detail.reviews)
     }
 
+    private var sortedReviews: [Review] {
+        switch sortOption {
+        case .dateDescending:
+            return detail.reviews.sorted {$0.createdAt > $1.createdAt}
+        case .dateAscending:
+            return detail.reviews.sorted {$0.createdAt < $1.createdAt}
+        case .ratingDescending:
+            return detail.reviews.sorted {$0.rating > $1.rating}
+        case .ratingAscending:
+            return detail.reviews.sorted {$0.rating < $1.rating}
+        }
+    }
+    
     private var header: some View {
         HStack {
             Text("Отзывы")
@@ -108,10 +130,41 @@ struct ReviewsView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12))
         }
     }
+    
+    private var sortMenu: some View {
+        HStack {
+            Spacer()
+            Menu {
+                ForEach(ReviewSortOption.allCases) { option in
+                    Button {
+                        sortOption = option
+                    } label: {
+                        if option == sortOption {
+                            Label(option.rawValue, systemImage: "checkmark")
+                        } else {
+                            Text(option.rawValue)
+                        }
+                    }
+                }
+            } label: {
+                HStack(spacing: 4) {
+                    Text(sortOption.rawValue)
+                        .font(DSTypography.headline)
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(DSTypography.headline)
+                }
+                .foregroundColor(.black)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(Color(uiColor: .systemGray6))
+                .clipShape(Capsule())
+            }
+        }
+    }
 
     private var reviewsList: some View {
         VStack(alignment: .leading, spacing: 16) {
-            ForEach(detail.reviews) { review in
+            ForEach(sortedReviews) { review in
                 reviewCard(review)
             }
         }
@@ -150,6 +203,7 @@ struct ReviewsView: View {
                     header
                     ratingSummary
                     writeReviewButton
+                    sortMenu
                     reviewsList
                 }
                 .padding(16)
