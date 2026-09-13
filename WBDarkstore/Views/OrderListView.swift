@@ -185,7 +185,6 @@ struct OrderListView: View {
                 switch route {
                 case .orderDetail(let order):
                     OrderDetailView(order: order)
-                        .toolbar(.hidden, for: .navigationBar)
                 default:
                     EmptyView()
                 }

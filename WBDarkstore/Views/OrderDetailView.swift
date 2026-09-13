@@ -223,6 +223,8 @@ struct OrderDetailView: View {
             .padding(20)
             .background(Color.white)
         }
+        .toolbar(.hidden, for: .navigationBar)
+        .enableSwipeBack()
     }
 }
 
