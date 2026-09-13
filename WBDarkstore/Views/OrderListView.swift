@@ -88,7 +88,7 @@ struct OrderListView: View {
                             }
                         }
                         .clipShape(RoundedRectangle(cornerRadius: 10))
-
+                    
                     if index == visibleItems.count - 1 && hiddenCount > 0 {
                         RoundedRectangle(cornerRadius: 10)
                             .fill(Color.black.opacity(0.45))
@@ -102,7 +102,7 @@ struct OrderListView: View {
             Spacer()
         }
     }
-
+    
     private func orderRow(for order: Order) -> some View {
         NavigationLink(value: order) {
             VStack(alignment: .leading, spacing: 10) {
@@ -118,19 +118,19 @@ struct OrderListView: View {
                                 .foregroundColor(DSColors.textSecondary)
                         }
                         .foregroundColor(DSColors.textPrimary)
-
+                        
                         Text(statusLine(for: order))
                             .font(DSTypography.body)
                             .foregroundColor(DSColors.textPrimary)
                     }
-
+                    
                     Spacer()
-
+                    
                     Image(systemName: "chevron.right")
                         .font(DSTypography.headline)
                         .foregroundColor(DSColors.textSecondary)
                 }
-
+                
                 thumbnailsRow(for: order)
             }
             .padding(16)
@@ -139,7 +139,7 @@ struct OrderListView: View {
         }
         .buttonStyle(.plain)
     }
-
+    
     private var emptyState: some View {
         VStack(spacing: 8) {
             Image(systemName: "shippingbox")
@@ -151,7 +151,7 @@ struct OrderListView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-
+    
     var body: some View {
         NavigationStack {
             Group {
@@ -166,7 +166,7 @@ struct OrderListView: View {
                             Text("История заказов")
                                 .font(DSTypography.title)
                                 .foregroundColor(DSColors.textPrimary)
-
+                            
                             VStack(spacing: 12) {
                                 ForEach(recentOrders) { order in
                                     orderRow(for: order)
@@ -179,6 +179,10 @@ struct OrderListView: View {
                         await services.orderService.loadOrders()
                     }
                 }
+            }
+            .navigationDestination(for: Order.self) { order in
+                OrderDetailView(order: order)
+                    .toolbar(.hidden, for: .navigationBar)
             }
             .navigationDestination(for: Order.self) { order in
                 OrderDetailView(order: order)

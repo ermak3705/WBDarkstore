@@ -9,6 +9,7 @@ import SwiftUI
 
 public enum DSTypography {
     public static let title = Font.system(size: 32, weight: .medium)
+    public static let titleCategories = Font.system(size: 34, weight: .bold)
     public static let title2 = Font.system(size: 26, weight: .medium)
     public static let title3 = Font.system(size: 20, weight: .regular)
     public static let price = Font.system(size: 18, weight: .semibold)
@@ -20,4 +21,5 @@ public enum DSTypography {
     public static let addressTypography = Font.system(size: 17, weight: .medium)
     public static let addressTypographyCart = Font.system(size: 17, weight: .semibold)
     public static let underCheckmark = Font.system(size: 56, weight: .medium)
+    public static let filedRow = Font.system(size: 18, weight: .regular)
 }

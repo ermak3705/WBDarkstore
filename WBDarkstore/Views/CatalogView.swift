@@ -200,14 +200,23 @@ struct CatalogView: View {
     }
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            contentView
-            bottomToolbar
+        VStack(spacing: 0) {
+            TopBarView()
+            Text("Категории")
+                .font(DSTypography.titleCategories)
+                .foregroundColor(DSColors.textPrimary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
+            ZStack(alignment: .bottom) {
+                contentView
+                bottomToolbar
+            }
         }
         .task {
             await services.categoryService.loadCategories()
         }
-        .navigationTitle("Категории")
+        //.navigationTitle("Категории")
         .sheet(isPresented: $showSearch) {
             SearchView(productsService: services.productService)
         }
