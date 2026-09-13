@@ -45,19 +45,56 @@ final class CartService {
     }
 
     func add(_ product: Product) async {
+        let previousItems = items
+        
+        if let index = items.firstIndex(where: { $0.id == product.id }) {
+            items[index] = CartItem(
+                id: items[index].id,
+                title: items[index].title,
+                price: items[index].price,
+                weight: items[index].weight,
+                imageURL: items[index].imageURL,
+                quantity: items[index].quantity + 1
+            )
+        } else {
+            items.append(
+                CartItem(
+                    id: product.id,
+                    title: product.title,
+                    price: product.price,
+                    weight: product.weight,
+                    imageURL: product.imageURL,
+                    quantity: 1
+                )
+            )
+        }
         do {
             try await store.add(product)
             items = await store.items
         } catch {
+            items = previousItems
             self.error = error
         }
     }
 
     func increment(_ item: CartItem) async {
+        let previousItems = items
+        
+        if let index = items.firstIndex(where: { $0.id == item.id }) {
+            items[index] = CartItem(
+                id: items[index].id,
+                title: items[index].title,
+                price: items[index].price,
+                weight: items[index].weight,
+                imageURL: items[index].imageURL,
+                quantity: items[index].quantity + 1
+            )
+        }
         do {
             try await store.increment(item)
             items = await store.items
         } catch {
+            items = previousItems
             self.error = error
         }
     }
@@ -67,10 +104,26 @@ final class CartService {
     }
 
     func remove(_ item: CartItem) async {
+        let previousItems = items
+        if let index = items.firstIndex(where: { $0.id == item.id }) {
+            if items[index].quantity > 1 {
+                items[index] = CartItem(
+                    id: items[index].id,
+                    title: items[index].title,
+                    price: items[index].price,
+                    weight: items[index].weight,
+                    imageURL: items[index].imageURL,
+                    quantity: items[index].quantity - 1
+                )
+            } else {
+                items.remove(at: index)
+            }
+        }
         do {
             try await store.remove(item)
             items = await store.items
         } catch {
+            items = previousItems
             self.error = error
         }
     }
