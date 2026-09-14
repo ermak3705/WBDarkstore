@@ -193,9 +193,8 @@ struct CartView: View {
         if success {
             await services.cartService.loadCart()
             await services.orderService.loadOrders()
-            withAnimation(.spring(response: 0.45, dampingFraction: 0.62)) {
-                showOrderPlaced = true
-            }        }
+            showOrderPlaced = true
+        }
     }
     
     private var activeError: Error? {
@@ -213,54 +212,39 @@ struct CartView: View {
     }
     
     var body: some View {
-        ZStack {
-            NavigationStack {
-                VStack(spacing: 0) {
-                    if services.cartService.isLoading && services.cartService.items.isEmpty {
-                        ProgressView()
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    } else {
-                        itemsList
-                        if !services.cartService.items.isEmpty {
-                            VStack(spacing: 12) {
-                                selectedAddressRow
-                                paymentMethodRow
-                            }
-                            .padding(.horizontal, 16)
-                            .padding(.top, 16)
-                            
-                            checkoutSection
+        NavigationStack {
+            VStack(spacing: 0) {
+                if services.cartService.isLoading && services.cartService.items.isEmpty {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    itemsList
+                    if !services.cartService.items.isEmpty {
+                        VStack(spacing: 12) {
+                            selectedAddressRow
+                            paymentMethodRow
                         }
+                        .padding(.horizontal, 16)
+                        .padding(.top, 16)
+                        
+                        checkoutSection
                     }
                 }
-                .navigationTitle("Корзина")
             }
-            
-            if showOrderPlaced {
-                OrderPlacedView {
-                    withAnimation(.easeInOut(duration: 0.25)) {
-                        showOrderPlaced = false
-                    }
-                }
-                .transition(
-                    .asymmetric(
-                        insertion: .scale(scale: 0.75).combined(with: .opacity),
-                        removal: .scale(scale: 0.92).combined(with: .opacity)
-                    )
-                )
-                .zIndex(1)
-            }
+            .navigationTitle("Корзина")
         }
         .sheet(isPresented: $showAddressList) {
             AddressListView()
         }
         
-        .onChange(of: showOrderPlaced) { wasShown, isShown in
-            if wasShown && !isShown {
-                services.selectedTab = .orders
-                if let newOrder = services.orderService.orders.first {
-                    services.router.push(.orderDetail(newOrder))
-                }
+        .fullScreenCover(isPresented: $showOrderPlaced, onDismiss: {
+            services.selectedTab = .orders
+            if let newOrder = services.orderService.orders.first {
+                services.router.push(.orderDetail(newOrder))
+            }
+        }) {
+            OrderPlacedView {
+                showOrderPlaced = false
             }
         }
         
