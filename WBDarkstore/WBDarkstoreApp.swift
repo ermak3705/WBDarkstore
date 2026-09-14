@@ -9,18 +9,23 @@ import SwiftUI
 
 @main
 struct WBDarkstoreApp: App {
-    
+
     @State private var services = ServiceLocator()
     @State private var showLoader = true
-    
+
     var body: some Scene {
         WindowGroup {
             ZStack {
                 if showLoader {
                     LoaderView()
                         .transition(.opacity)
-                } else {
+                } else if services.authService.isAuthenticated {
                     MainTabView()
+                        .environment(services.router)
+                        .environment(services)
+                        .transition(.opacity)
+                } else {
+                    LoginView()
                         .environment(services.router)
                         .environment(services)
                         .transition(.opacity)
