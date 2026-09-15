@@ -12,6 +12,9 @@ public enum DSColors {
     
     public static let gradientStart = Color(hex: "#ED3CCA")
     public static let gradientEnd = Color(hex: "#6600FF")
+    public static let ActiveIsFavorite = Color(hex: "#E313BF")
+    public static let InActiveIsFavorite = Color(hex: "#B9B9B8")
+    
     
     public static let background = Color.white
     public static let secondaryBackground = Color(uiColor: .systemGray6)

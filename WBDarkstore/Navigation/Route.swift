@@ -12,4 +12,5 @@ enum Route: Hashable {
     case catalog
     case categoryDetail(Category)
     case profile
+    case orderDetail(Order)
 }

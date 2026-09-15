@@ -13,8 +13,10 @@ enum AppTab: Hashable {
     case catalog
     case favorites
     case cart
+    case orders
 }
 
+@MainActor
 @Observable
 final class ServiceLocator {
     

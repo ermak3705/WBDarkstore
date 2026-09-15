@@ -109,8 +109,10 @@ struct AddressListView: View {
                 Button {
                     editingAddress = address
                 } label: {
-                    Image(systemName: "pencil.circle")
-                        .font(.system(size: 24, weight: .medium))
+                    Image("Pen")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 24, height: 24)
                         .foregroundColor(DSColors.textSecondary)
                 }
                 .buttonStyle(.plain)
