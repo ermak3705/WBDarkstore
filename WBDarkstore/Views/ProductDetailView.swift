@@ -107,9 +107,11 @@ struct ProductDetailView: View {
                                    await services.favoritesService.toggle(product)
                                 }
                                 } label: {
-                                    Image(systemName: isFavorite ? "heart.fill" : "heart")
-                                        .font(.system(size: 20, weight: .medium))
-                                        .foregroundColor(isFavorite ? .pink : .gray)
+                                    Image("Heart")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 30, height: 30)
+                                        .foregroundColor(isFavorite ? DSColors.ActiveIsFavorite : DSColors.InActiveIsFavorite)
                                 }
                             }
                             

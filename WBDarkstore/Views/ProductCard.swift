@@ -40,9 +40,11 @@ struct ProductCard: View {
                             await services.favoritesService.toggle(product)
                         }
                     } label: {
-                        Image(systemName: services.favoritesService.isFavorite(product) ? "heart.fill" : "heart")
-                            .font(.system(size: 20, weight: .regular))
-                            .foregroundColor(services.favoritesService.isFavorite(product) ? .pink : Color(uiColor: .systemGray3))
+                        Image("Heart")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(services.favoritesService.isFavorite(product) ? DSColors.ActiveIsFavorite : DSColors.InActiveIsFavorite)
                     }
                     .padding(12)
                 }
