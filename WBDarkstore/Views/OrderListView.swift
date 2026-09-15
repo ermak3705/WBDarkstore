@@ -61,14 +61,15 @@ struct OrderListView: View {
         }
     }
 
-    private func thumbnailsRow(for order: Order) -> some View {
+    private func thumbnailsRow(for order: Order, size: CGFloat = 44) -> some View {
         let visibleItems = Array(order.items.prefix(maxVisibleThumbnails))
         let hiddenCount = order.items.count - visibleItems.count
+        let cornerRadius: CGFloat = size > 44 ? 14 : 10
 
-        return HStack(spacing: 8) {
+        return HStack(spacing: size > 44 ? 10 : 8) {
             ForEach(Array(visibleItems.enumerated()), id: \.element.id) { index, item in
                 ZStack {
-                    RoundedRectangle(cornerRadius: 10)
+                    RoundedRectangle(cornerRadius: cornerRadius)
                         .fill(DSColors.background)
                         .overlay {
                             CachedAsyncImage(url: item.imageURL) { phase in
@@ -79,7 +80,7 @@ struct OrderListView: View {
                                         .aspectRatio(contentMode: .fill)
                                 case .failure:
                                     Image(systemName: "photo")
-                                        .foregroundColor(.gray)
+                                        .foregroundColor(DSColors.textSecondary)
                                 case .empty:
                                     ProgressView()
                                 @unknown default:
@@ -87,17 +88,17 @@ struct OrderListView: View {
                                 }
                             }
                         }
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
                     
                     if index == visibleItems.count - 1 && hiddenCount > 0 {
-                        RoundedRectangle(cornerRadius: 10)
+                        RoundedRectangle(cornerRadius: cornerRadius)
                             .fill(Color.black.opacity(0.45))
                         Text("+\(hiddenCount)")
                             .font(DSTypography.body)
                             .foregroundColor(.white)
                     }
                 }
-                .frame(width: 44, height: 44)
+                .frame(width: size, height: size)
             }
             Spacer()
         }
@@ -105,33 +106,60 @@ struct OrderListView: View {
     
     private func orderRow(for order: Order) -> some View {
         NavigationLink(value: Route.orderDetail(order)) {
-            VStack(alignment: .leading, spacing: 10) {
-                HStack(alignment: .top, spacing: 8) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack(alignment: .bottom, spacing: 4) {
-                            Text("\(order.totalPrice)")
-                                .font(DSTypography.price)
-                            Text("₽")
-                                .font(DSTypography.price)
-                            Text("\(order.totalItems) \(order.totalItems.pluralized(one: "товар", few: "товара", many: "товаров"))")
-                                .font(DSTypography.price)
+            Group {
+                if order.status == .active {
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack(alignment: .top, spacing: 8) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("В пути")
+                                    .font(DSTypography.priceButton)
+                                    .foregroundColor(DSColors.textPrimary)
+                                
+                                Text(order.addressLine)
+                                    .font(DSTypography.body)
+                                    .foregroundColor(DSColors.textPrimary)
+                                    .lineLimit(1)
+                            }
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .font(DSTypography.headline)
                                 .foregroundColor(DSColors.textSecondary)
                         }
-                        .foregroundColor(DSColors.textPrimary)
                         
-                        Text(statusLine(for: order))
-                            .font(DSTypography.body)
-                            .foregroundColor(DSColors.textPrimary)
+                        thumbnailsRow(for: order, size: 64)
                     }
-                    
-                    Spacer()
-                    
-                    Image(systemName: "chevron.right")
-                        .font(DSTypography.headline)
-                        .foregroundColor(DSColors.textSecondary)
+                } else {
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack(alignment: .top, spacing: 8) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack(alignment: .bottom, spacing: 4) {
+                                    Text("\(order.totalPrice)")
+                                        .font(DSTypography.price)
+                                    Text("₽")
+                                        .font(DSTypography.price)
+                                    Text("\(order.totalItems) \(order.totalItems.pluralized(one: "товар", few: "товара", many: "товаров"))")
+                                        .font(DSTypography.price)
+                                        .foregroundColor(DSColors.textSecondary)
+                                }
+                                .foregroundColor(DSColors.textPrimary)
+                                
+                                Text(statusLine(for: order))
+                                    .font(DSTypography.body)
+                                    .foregroundColor(DSColors.textPrimary)
+                            }
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .font(DSTypography.headline)
+                                .foregroundColor(DSColors.textSecondary)
+                        }
+                        
+                        thumbnailsRow(for: order)
+                    }
                 }
-                
-                thumbnailsRow(for: order)
             }
             .padding(16)
             .background {
