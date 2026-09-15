@@ -123,7 +123,7 @@ struct AddressFormView: View {
         var finalAddressLine = addressLine
         let trimmedApartment = apartment.trimmingCharacters(in: .whitespaces)
         if !trimmedApartment.isEmpty {
-            finalAddressLine += ", кв./офис \(trimmedApartment)"
+            finalAddressLine += ", кв. \(trimmedApartment)"
         }
 
         let success: Bool
@@ -163,7 +163,7 @@ struct AddressFormView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     DSTextField(placeholder: "Адрес", text: $addressLine)
-                    DSTextField(placeholder: "Квартира/офис", text: $apartment)
+                    DSTextField(placeholder: "Квартира", text: $apartment)
                     DSTextField(placeholder: "Подъезд", text: $entrance)
                     DSTextField(placeholder: "Этаж", text: $floor)
                     DSTextField(placeholder: "Код домофона", text: $intercomCode)

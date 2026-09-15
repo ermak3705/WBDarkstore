@@ -163,7 +163,7 @@ struct CatalogView: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .overlay {
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                    .stroke(DSGradients.smoky, lineWidth: 1)
             }
         }
     }
