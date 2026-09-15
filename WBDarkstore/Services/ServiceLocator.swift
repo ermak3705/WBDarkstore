@@ -16,6 +16,7 @@ enum AppTab: Hashable {
     case orders
 }
 
+@MainActor
 @Observable
 final class ServiceLocator {
     

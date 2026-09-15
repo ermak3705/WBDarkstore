@@ -13,6 +13,8 @@ struct WBDarkstoreApp: App {
     @State private var services = ServiceLocator()
     @State private var showLoader = true
 
+    private let splashDuration: UInt64 = 1_500_000_000
+    
     var body: some Scene {
         WindowGroup {
             ZStack {
@@ -33,7 +35,7 @@ struct WBDarkstoreApp: App {
             }
             .preferredColorScheme(.light)
             .task {
-                try? await Task.sleep(nanoseconds: 1_500_000_000)
+                try? await Task.sleep(nanoseconds: splashDuration)
                 withAnimation(.easeInOut(duration: 0.45)) {
                     showLoader = false
                 }

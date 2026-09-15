@@ -9,6 +9,7 @@ import Foundation
 import OpenAPIRuntime
 import OpenAPIURLSession
 
+@MainActor
 @Observable
 final class CartService {
     private let store: CartActor

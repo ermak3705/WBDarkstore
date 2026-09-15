@@ -60,7 +60,11 @@ actor CartActor {
                 )
             )
         }
-        try? context.save()
+        do {
+            try context.save()
+        } catch {
+            print("Не удалось сохранить корзину в кэш: \(error)")
+        }
     }
     
     @discardableResult
@@ -119,7 +123,7 @@ actor CartActor {
         }
     }
     
-    func increment (_ item: CartItem) async throws {
+    func increment(_ item: CartItem) async throws {
         let response = try await client.postCartItems(query: .init(id: item.id))
         switch response {
         case .ok:
@@ -135,7 +139,7 @@ actor CartActor {
         }
     }
     
-    func remove (_ item: CartItem) async throws {
+    func remove(_ item: CartItem) async throws {
         let response = try await client.deleteCartItemsId(path: .init(id: item.id))
         switch response {
         case .ok:

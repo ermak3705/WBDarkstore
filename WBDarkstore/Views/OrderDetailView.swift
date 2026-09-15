@@ -77,7 +77,7 @@ struct OrderDetailView: View {
                 Text(headline.line2)
             }
             .font(DSTypography.title)
-            .foregroundColor(.black)
+            .foregroundColor(DSColors.textPrimary)
 
             Spacer()
 
@@ -86,7 +86,7 @@ struct OrderDetailView: View {
             } label: {
                 Image(systemName: "xmark")
                     .font(.system(size: 24, weight: .medium))
-                    .foregroundColor(.black)
+                    .foregroundColor(DSColors.textPrimary)
             }
         }
     }
@@ -105,7 +105,7 @@ struct OrderDetailView: View {
                                 .aspectRatio(contentMode: .fill)
                         case .failure:
                             Image(systemName: "photo")
-                                .foregroundColor(.gray)
+                                .foregroundColor(DSColors.textSecondary)
                         case .empty:
                             ProgressView()
                         @unknown default:
@@ -118,15 +118,15 @@ struct OrderDetailView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text("\(item.price) ₽, \(item.quantity) шт")
                     .font(DSTypography.price)
-                    .foregroundColor(.black)
+                    .foregroundColor(DSColors.textPrimary)
 
                 HStack(spacing: 4) {
                     Text(item.title)
                         .font(DSTypography.body)
-                        .foregroundColor(.black)
+                        .foregroundColor(DSColors.textPrimary)
                     Text("\(item.weight) г")
                         .font(DSTypography.body)
-                        .foregroundColor(.gray)
+                        .foregroundColor(DSColors.textSecondary)
                 }
             }
 
@@ -143,26 +143,26 @@ struct OrderDetailView: View {
                 Text("\(order.totalPrice) ₽")
                     .font(DSTypography.price)
             }
-            .foregroundColor(.black)
+            .foregroundColor(DSColors.textPrimary)
 
             HStack {
                 Text(itemsCountLabel)
                     .font(DSTypography.body)
-                    .foregroundColor(.black)
+                    .foregroundColor(DSColors.textPrimary)
                 Spacer()
                 Text("\(order.orderPrice) ₽")
                     .font(DSTypography.body)
-                    .foregroundColor(.black)
+                    .foregroundColor(DSColors.textPrimary)
             }
 
             HStack {
                 Text("Доставка")
                     .font(DSTypography.body)
-                    .foregroundColor(.black)
+                    .foregroundColor(DSColors.textPrimary)
                 Spacer()
                 Text(deliveryLabel)
                     .font(DSTypography.body)
-                    .foregroundColor(.black)
+                    .foregroundColor(DSColors.textPrimary)
             }
         }
     }
@@ -197,7 +197,7 @@ struct OrderDetailView: View {
             } label: {
                 Text("Скачать чек")
                     .font(DSTypography.privestiSudaButton)
-                    .foregroundColor(.black)
+                    .foregroundColor(DSColors.textPrimary)
                     .frame(width: 150)
                     .frame(height: 50)
                     .background(Color.white)
@@ -207,6 +207,7 @@ struct OrderDetailView: View {
                     }
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
+            .disabled(true)
 
             Button {
                 Task { await repeatOrder() }
@@ -238,7 +239,7 @@ struct OrderDetailView: View {
                     
                     Text(order.addressLine)
                         .font(DSTypography.body)
-                        .foregroundColor(.black)
+                        .foregroundColor(DSColors.textPrimary)
                     
                     VStack(spacing: 16) {
                         ForEach(order.items) { item in
