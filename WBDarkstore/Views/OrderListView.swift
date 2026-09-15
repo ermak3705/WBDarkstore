@@ -134,7 +134,13 @@ struct OrderListView: View {
                 thumbnailsRow(for: order)
             }
             .padding(16)
-            .background(DSGradients.smoky)
+            .background {
+                if order.status == .active {
+                    DSGradients.smoky
+                } else {
+                    DSColors.secondaryBackground
+                }
+            }
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }
         .buttonStyle(.plain)

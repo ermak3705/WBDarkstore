@@ -12,6 +12,8 @@ struct OrderDetailView: View {
     let order: Order
     
     @Environment(\.dismiss) private var dismiss
+    @Environment(ServiceLocator.self) private var services
+    @State private var isRepeatingOrder = false
     
     private static let isoFormatterFractional: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
@@ -165,10 +167,33 @@ struct OrderDetailView: View {
         }
     }
     
+    private func repeatOrder() async {
+        isRepeatingOrder = true
+        defer { isRepeatingOrder = false }
+        
+        for item in order.items {
+            let product = Product(
+                id: item.id,
+                title: item.title,
+                price: item.price,
+                imageURL: item.imageURL,
+                rating: 0,
+                reviewCount: 0,
+                weight: item.weight
+            )
+            for _ in 0..<item.quantity {
+                await services.cartService.add(product)
+            }
+        }
+        
+        services.selectedTab = .cart
+        dismiss()
+    }
+    
     private var actionButtons: some View {
         HStack(spacing: 12) {
             Button {
-                // логика
+                // TODO: нет в бэке
             } label: {
                 Text("Скачать чек")
                     .font(DSTypography.privestiSudaButton)
@@ -184,16 +209,24 @@ struct OrderDetailView: View {
             }
 
             Button {
-                // логика
+                Task { await repeatOrder() }
             } label: {
-                Text("Повторить заказ")
-                    .font(DSTypography.privestiSudaButton)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 50)
-                    .background(DSGradients.violet)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                Group {
+                    if isRepeatingOrder {
+                        ProgressView()
+                            .tint(.white)
+                    } else {
+                        Text("Повторить заказ")
+                            .font(DSTypography.privestiSudaButton)
+                    }
+                }
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .frame(height: 50)
+                .background(DSGradients.violet)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
             }
+            .disabled(isRepeatingOrder)
         }
     }
 
