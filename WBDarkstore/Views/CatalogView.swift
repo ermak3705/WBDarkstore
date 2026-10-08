@@ -58,7 +58,7 @@ struct CatalogView: View {
         VStack(spacing: 12) {
             Image(systemName: "wifi.slash")
                 .font(.system(size: 40))
-                .foregroundColor(.gray)
+                .foregroundColor(DSColors.textSecondary)
             Spacer()
             
             Text("Не удалось загрузить товары")
@@ -103,7 +103,7 @@ struct CatalogView: View {
                                 .aspectRatio(contentMode: .fill)
                         case .failure:
                             Image(systemName: "photo")
-                                .foregroundColor(.gray)
+                                .foregroundColor(DSColors.textSecondary)
                         case .empty:
                             ProgressView()
                         @unknown default:
@@ -133,7 +133,7 @@ struct CatalogView: View {
                 .overlay(alignment: .bottomLeading) {
                     Text(category.name)
                         .font(DSTypography.headline)
-                        .foregroundColor(.black)
+                        .foregroundColor(DSColors.textPrimary)
                         .padding(.bottom, 6)
                         .padding(.leading, 8)
                 }
@@ -168,7 +168,7 @@ struct CatalogView: View {
                 Text("Поиск")
             }
             .font(DSTypography.priceButton)
-            .foregroundColor(.black)
+            .foregroundColor(DSColors.textPrimary)
             .padding(.horizontal, 20)
             .frame(height: 50)
             .background(Color.white)
@@ -197,8 +197,7 @@ struct CatalogView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Доставим")
                         .font(DSTypography.price)
-                    //так потому что с бэка приходит пустая строка, что было красиво пришлось захардкодить текст
-                    Text("через 12 минут")
+                    Text("через \(deliveryMinutesRemaining ?? 12) \((deliveryMinutesRemaining ?? 12).pluralized(one: "минуту", few: "минуты", many: "минут"))")
                         .font(DSTypography.body)
                 }
 

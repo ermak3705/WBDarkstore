@@ -171,18 +171,24 @@ struct OrderDetailView: View {
         isRepeatingOrder = true
         defer { isRepeatingOrder = false }
         
-        for item in order.items {
-            let product = Product(
-                id: item.id,
-                title: item.title,
-                price: item.price,
-                imageURL: item.imageURL,
-                rating: 0,
-                reviewCount: 0,
-                weight: item.weight
-            )
-            for _ in 0..<item.quantity {
-                await services.cartService.add(product)
+        let cartService = services.cartService
+        await withTaskGroup(of: Void.self) { group in
+            for item in order.items {
+                let product = Product(
+                    id: item.id,
+                    title: item.title,
+                    price: item.price,
+                    imageURL: item.imageURL,
+                    rating: 0,
+                    reviewCount: 0,
+                    weight: item.weight
+                )
+                let quantity = item.quantity
+                group.addTask {
+                    for _ in 0..<quantity {
+                        await cartService.add(product)
+                    }
+                }
             }
         }
         

@@ -126,11 +126,11 @@ final class UserService {
         request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
 
         var body = Data()
-        body.append("--\(boundary)\r\n".data(using: .utf8)!)
-        body.append("Content-Disposition: form-data; name=\"file\"; filename=\"avatar.jxl\"\r\n".data(using: .utf8)!)
-        body.append("Content-Type: image/jxl\r\n\r\n".data(using: .utf8)!)
+        body.append(Data("--\(boundary)\r\n".utf8))
+        body.append(Data("Content-Disposition: form-data; name=\"file\"; filename=\"avatar.jxl\"\r\n".utf8))
+        body.append(Data("Content-Type: image/jxl\r\n\r\n".utf8))
         body.append(data)
-        body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+        body.append(Data("\r\n--\(boundary)--\r\n".utf8))
         request.httpBody = body
         
         let (responseData, response) = try await URLSession.shared.data(for: request)
