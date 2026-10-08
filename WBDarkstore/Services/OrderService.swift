@@ -17,7 +17,11 @@ final class OrderService {
     private(set) var isLoading = false
     private(set) var isCreatingOrder = false
     private(set) var error: Error?
-
+    
+    var activeOrder: Order? {
+        orders.first { $0.status == .active }
+    }
+    
     init(client: Client) {
         self.client = client
     }

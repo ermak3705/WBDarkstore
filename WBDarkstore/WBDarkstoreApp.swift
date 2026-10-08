@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct WBDarkstoreApp: App {
-    
+
     @State private var services = ServiceLocator()
     @State private var showLoader = true
+
+    private let splashDuration: UInt64 = 1_500_000_000
     
     var body: some Scene {
         WindowGroup {
@@ -19,8 +21,13 @@ struct WBDarkstoreApp: App {
                 if showLoader {
                     LoaderView()
                         .transition(.opacity)
-                } else {
+                } else if services.authService.isAuthenticated {
                     MainTabView()
+                        .environment(services.router)
+                        .environment(services)
+                        .transition(.opacity)
+                } else {
+                    LoginView()
                         .environment(services.router)
                         .environment(services)
                         .transition(.opacity)
@@ -28,7 +35,7 @@ struct WBDarkstoreApp: App {
             }
             .preferredColorScheme(.light)
             .task {
-                try? await Task.sleep(nanoseconds: 1_500_000_000)
+                try? await Task.sleep(nanoseconds: splashDuration)
                 withAnimation(.easeInOut(duration: 0.45)) {
                     showLoader = false
                 }

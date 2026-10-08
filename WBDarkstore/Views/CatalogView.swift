@@ -18,7 +18,17 @@ struct CatalogView: View {
         .init(.flexible(), spacing: 12),
         .init(.flexible(), spacing: 12)
     ]
-
+    
+    private var activeOrder: Order? {
+        services.orderService.activeOrder
+    }
+    
+    private var deliveryMinutesRemaining: Int? {
+        guard let date = activeOrder?.parsedDeliveryDate else { return nil }
+        let minutes = Calendar.current.dateComponents([.minute], from: Date(), to: date).minute ?? 0
+        return max(minutes, 0)
+    }
+    
     @ViewBuilder
     private var contentView: some View {
         ScrollView {
@@ -48,7 +58,7 @@ struct CatalogView: View {
         VStack(spacing: 12) {
             Image(systemName: "wifi.slash")
                 .font(.system(size: 40))
-                .foregroundColor(.gray)
+                .foregroundColor(DSColors.textSecondary)
             Spacer()
             
             Text("Не удалось загрузить товары")
@@ -93,7 +103,7 @@ struct CatalogView: View {
                                 .aspectRatio(contentMode: .fill)
                         case .failure:
                             Image(systemName: "photo")
-                                .foregroundColor(.gray)
+                                .foregroundColor(DSColors.textSecondary)
                         case .empty:
                             ProgressView()
                         @unknown default:
@@ -123,7 +133,7 @@ struct CatalogView: View {
                 .overlay(alignment: .bottomLeading) {
                     Text(category.name)
                         .font(DSTypography.headline)
-                        .foregroundColor(.black)
+                        .foregroundColor(DSColors.textPrimary)
                         .padding(.bottom, 6)
                         .padding(.leading, 8)
                 }
@@ -132,12 +142,14 @@ struct CatalogView: View {
         }
         .buttonStyle(.plain)
     }
-
+    
     private var bottomToolbar: some View {
         HStack(spacing: 12) {
             searchButton
-
-            if !services.cartService.items.isEmpty {
+            
+            if activeOrder != nil {
+                deliveryStatusButton
+            } else if !services.cartService.items.isEmpty {
                 checkoutButton
             } else {
                 Spacer()
@@ -156,7 +168,7 @@ struct CatalogView: View {
                 Text("Поиск")
             }
             .font(DSTypography.priceButton)
-            .foregroundColor(.black)
+            .foregroundColor(DSColors.textPrimary)
             .padding(.horizontal, 20)
             .frame(height: 50)
             .background(Color.white)
@@ -168,6 +180,39 @@ struct CatalogView: View {
         }
     }
 
+    private var deliveryStatusButton: some View {
+        Button {
+            services.selectedTab = .orders
+            if let activeOrder {
+                services.router.push(.orderDetail(activeOrder))
+            }
+        } label: {
+            HStack(spacing: 8) {
+                Spacer()
+                Image("Racketa")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Доставим")
+                        .font(DSTypography.price)
+                    Text("через \(deliveryMinutesRemaining ?? 12) \((deliveryMinutesRemaining ?? 12).pluralized(one: "минуту", few: "минуты", many: "минут"))")
+                        .font(DSTypography.body)
+                }
+
+                Spacer()
+            }
+            .foregroundColor(.white)
+            .padding(.horizontal, 16)
+            .frame(height: 50)
+            .background(DSGradients.violet)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .disabled(true)
+        .frame(maxWidth: .infinity)
+    }
+    
     private var checkoutButton: some View {
         Button {
             services.selectedTab = .cart
@@ -200,14 +245,25 @@ struct CatalogView: View {
     }
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            contentView
-            bottomToolbar
+        VStack(spacing: 0) {
+            TopBarView()
+            Text("Категории")
+                .font(DSTypography.titleCategories)
+                .foregroundColor(DSColors.textPrimary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
+            ZStack(alignment: .bottom) {
+                contentView
+                bottomToolbar
+            }
         }
         .task {
             await services.categoryService.loadCategories()
+            await services.orderService.loadOrders()
+
         }
-        .navigationTitle("Категории")
+
         .sheet(isPresented: $showSearch) {
             SearchView(productsService: services.productService)
         }
