@@ -44,7 +44,7 @@ struct ProductCard: View {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 24, height: 24)
-                            .foregroundColor(services.favoritesService.isFavorite(product) ? DSColors.ActiveIsFavorite : DSColors.InActiveIsFavorite)
+                            .foregroundColor(services.favoritesService.isFavorite(product) ? DSColors.activeIsFavorite : DSColors.inActiveIsFavorite)
                     }
                     .padding(12)
                 }

@@ -52,7 +52,7 @@ struct ProfileView: View {
             .overlay(
                 Text(initial)
                     .font(.system(size: 32))
-                    .foregroundColor(.black)
+                    .foregroundColor(DSColors.textPrimary)
             )
     }
 
@@ -130,7 +130,7 @@ struct ProfileView: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title).font(DSTypography.body).foregroundColor(DSColors.textSecondary)
             TextField("", text: text)
-                .font(DSTypography.filedRow)
+                .font(DSTypography.fieldRow)
             Divider()
         }
     }
@@ -141,7 +141,7 @@ struct ProfileView: View {
             HStack(spacing: 6) {
                 Image(systemName: "lock.fill").font(DSTypography.body).foregroundColor(DSColors.textSecondary)
                 Text(value).foregroundColor(DSColors.textSecondary)
-                    .font(DSTypography.filedRow)
+                    .font(DSTypography.fieldRow)
             }
             Divider()
         }
@@ -151,7 +151,7 @@ struct ProfileView: View {
         VStack(alignment: .leading, spacing: 4) {
             Text("День рождения").font(DSTypography.body).foregroundColor(DSColors.textSecondary)
             TextField("ДД.ММ.ГГГГ", text: $editedBirthday)
-                .font(DSTypography.filedRow)
+                .font(DSTypography.fieldRow)
                 .keyboardType(.numberPad)
                 .onChange(of: editedBirthday) { _, newValue in
                     editedBirthday = formattedBirthday(from: newValue)

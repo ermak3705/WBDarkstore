@@ -111,7 +111,7 @@ struct ProductDetailView: View {
                                         .resizable()
                                         .scaledToFit()
                                         .frame(width: 30, height: 30)
-                                        .foregroundColor(isFavorite ? DSColors.ActiveIsFavorite : DSColors.InActiveIsFavorite)
+                                        .foregroundColor(isFavorite ? DSColors.activeIsFavorite : DSColors.inActiveIsFavorite)
                                 }
                             }
                             

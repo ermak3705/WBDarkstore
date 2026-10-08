@@ -55,7 +55,7 @@ struct ReviewsView: View {
         HStack {
             Text("Отзывы")
                 .font(DSTypography.title)
-                .foregroundColor(.black)
+                .foregroundColor(DSColors.textPrimary)
             Text("\(summary.totalCount)")
                 .font(DSTypography.title)
                 .foregroundColor(.gray)
@@ -123,7 +123,7 @@ struct ReviewsView: View {
         } label: {
             Text("Написать отзыв")
                 .font(DSTypography.privestiSudaButton)
-                .foregroundColor(.black)
+                .foregroundColor(DSColors.textPrimary)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
                 .background(DSGradients.smoky)
@@ -153,7 +153,7 @@ struct ReviewsView: View {
                     Image(systemName: "chevron.up.chevron.down")
                         .font(DSTypography.headline)
                 }
-                .foregroundColor(.black)
+                .foregroundColor(DSColors.textPrimary)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
                 .background(Color(uiColor: .systemGray6))
