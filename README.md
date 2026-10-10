@@ -14,6 +14,19 @@
 - Адреса доставки: список, форма, выбор точки на карте
 - Экран входа и анимированный лоадер при запуске
 
+## Скриншоты
+
+<p align="center">
+  <img src="Screenshots/catalog.png" width="200" alt="Каталог">
+  <img src="Screenshots/product.png" width="200" alt="Карточка товара">
+  <img src="Screenshots/reviews.png" width="200" alt="Отзывы">
+</p>
+<p align="center">
+  <img src="Screenshots/cart.png" width="200" alt="Корзина">
+  <img src="Screenshots/favorites.png" width="200" alt="Избранное">
+  <img src="Screenshots/orders.png" width="200" alt="История заказов">
+</p>
+
 ## Технологии
 
 - **SwiftUI**, `@Observable`, `NavigationStack` с общим `Router`
